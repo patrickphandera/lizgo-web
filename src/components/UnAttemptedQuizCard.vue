@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 col-sm-6 col-md-4">
-    <q-card class="rounded-xl" bordered flat>
+    <q-card class="rounded-xl">
 
       <!-- Body -->
       <q-card-section>
@@ -12,7 +12,7 @@
           Test your understanding of algebra fundamentals
         </div>
 
-        <div class="row  q-gutter-sm q-mt-md">
+        <div class="row  q-gutter-sm q-mt-xs">
 
           <q-chip dense square flat text-color="black" class="text-caption ">
             Mathematics
@@ -24,7 +24,9 @@
           <q-chip dense text-color="black" class="text-caption ">
             20 Questions
           </q-chip>
-
+          <q-chip dense text-color="black" class="text-caption ">
+            Heighest Performer - 40%
+          </q-chip>
           <q-chip dense text-color="black" class="text-caption ">
             ⏱ 30 mins
           </q-chip>
@@ -34,9 +36,11 @@
       <!-- <q-separator /> -->
 
       <!-- Actions -->
+      <div class="q-pt-xs q-px-md q-pb-md ">
+        <QuizAttemptModal />
+      </div>
 
 
-      <QuizAttemptModal />
 
 
 

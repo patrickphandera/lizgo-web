@@ -43,7 +43,7 @@ const routes = [
     component: () => import('layouts/QuizLayout.vue'),
     children: [
       { path: '', component: () => import('pages/QuizzesPage.vue') },
-      // { path: ':id', component: () => import('pages/QuizPage.vue') },
+      { path: ':id', component: () => import('pages/QuizPage.vue') },
     ],
   },
   {
@@ -54,7 +54,7 @@ const routes = [
       { path: ':id', component: () => import('pages/LessonPage.vue') },
     ],
   },
-   {
+  {
     path: '/admin',
     component: () => import('layouts/AdminLayout.vue'),
     children: [

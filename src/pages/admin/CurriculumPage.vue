@@ -9,7 +9,10 @@
 
     <div class="row q-mt-md">
       <div class="col-12">
-        <q-table :rows="filteredCurriculums" :columns="columns" row-key="id" class="q-mt-md">
+        <q-select v-model="filterCountry" :options="filterCountryOptions" option-label="label" option-value="country"
+          label="Filter by country" dense outlined clearable emit-value map-options />
+
+        <q-table :rows="filteredCurriculums" :columns="columns" row-key="_id" class="q-mt-md">
           <template v-slot:body-cell-actions="props">
             <q-td align="right">
               <q-btn dense flat icon="visibility" @click="viewItem(props.row)"></q-btn>
@@ -34,11 +37,8 @@
               <q-input v-model="form.title" label="Title" dense outlined />
             </div>
             <div class="col-12">
-              <q-select v-model="form.country_code" :options="countryOptions" option-label="label" option-value="value"
-                class="width-full" label="Country" dense outlined />
-            </div>
-            <div class="col-12">
-              <q-input v-model="form.country" label="Country (override)" dense outlined />
+              <q-select v-model="selectedCountry" :options="countryOptions" option-label="label" option-value="value"
+                class="width-full" label="Country" dense outlined emit-value map-options />
             </div>
             <div class="col-12">
               <q-input v-model="form.description" type="textarea" label="Description" dense outlined />
@@ -64,6 +64,8 @@
         <q-separator></q-separator>
         <q-card-section>
           <div><strong>Title:</strong> {{ viewDialog.item.title }}</div>
+          <div><strong>Country:</strong> {{ viewDialog.item.country }}</div>
+          <div><strong>Country Code:</strong> {{ viewDialog.item.country_code }}</div>
           <div class="q-mt-sm"><strong>Description:</strong>
             <div>{{ viewDialog.item.description }}</div>
           </div>
@@ -78,121 +80,135 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted } from 'vue'
 import curriculumsService from 'src/services/curriculums.service.js'
 
-export default defineComponent({
+export default {
   name: 'CurriculumAdminPage',
-  setup() {
-    const curriculums = ref([])
-
-
-    const columns = [
-      { name: 'title', label: 'Title', field: row => row.title, align: 'left' },
-      { name: 'description', label: 'Description', field: 'description' },
-      { name: 'actions', label: 'Actions', field: 'actions', sortable: false }
+  data() {
+    return {
+      curriculums: [],
+      filterCountry: null,
+      selectedCountry: null,
+      countryOptions: [
+        { label: 'Malawi', value: 'MW', country: 'Malawi' },
+        { label: 'Zambia', value: 'ZM', country: 'Zambia' },
+        { label: 'Tanzania', value: 'TZ', country: 'Tanzania' },
+        { label: 'Kenya', value: 'KE', country: 'Kenya' }
+      ],
+      filterCountryOptions: [
+        { label: 'All', value: 'ALL' }
+      ],
+      columns: [
+        { name: 'title', label: 'Title', field: row => row.title, align: 'left' },
+        { name: 'country', label: 'Country', field: 'country' },
+        { name: 'country_code', label: 'Code', field: 'country_code' },
+        { name: 'description', label: 'Description', field: 'description' },
+        { name: 'actions', label: 'Actions', field: 'actions', sortable: false }
+      ],
+      dialog: { show: false, mode: 'new', id: null },
+      viewDialog: { show: false, item: {} },
+      form: { title: '', description: '', country_code: '', country: '' }
+    }
+  },
+  computed: {
+    filteredCurriculums() {
+      const list = Array.isArray(this.curriculums) ? this.curriculums : []
+      if (!this.filterCountry || this.filterCountry === 'ALL') return list
+      return list.filter(c => c.country === this.filterCountry)
+    }
+  },
+  watch: {
+    selectedCountry(newVal) {
+      if (newVal) {
+        const selectedOption = this.countryOptions.find(opt => opt.value === newVal)
+        if (selectedOption) {
+          this.form.country_code = selectedOption.value
+          this.form.country = selectedOption.country
+        }
+      } else {
+        this.form.country_code = ''
+        this.form.country = ''
+      }
+    }
+  },
+  created() {
+    this.filterCountryOptions = [
+      { label: 'All', value: 'ALL', country: 'ALL' },
+      ...this.countryOptions
     ]
-
-    const dialog = ref({ show: false, mode: 'new', id: null })
-    const viewDialog = ref({ show: false, item: {} })
-
-    const form = ref({ title: '', description: '' })
-
-    // function capitalize(s) {
-    //   if (!s) return s
-    //   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
-    // }
-
-
-    const load = async () => {
+    this.load()
+  },
+  methods: {
+    async load() {
       try {
         const res = await curriculumsService.list()
         console.log('Curriculums loaded:', res)
-        if (Array.isArray(res)) {
-          curriculums.value = res
-        } else if (res && Array.isArray(res.data)) {
-          curriculums.value = res.data
+        if (res && Array.isArray(res.data)) {
+          this.curriculums = res.data
         } else if (res && Array.isArray(res.items)) {
-          curriculums.value = res.items
+          this.curriculums = res.items
+        } else if (Array.isArray(res)) {
+          this.curriculums = res
         } else {
-          curriculums.value = []
+          this.curriculums = []
         }
       } catch (err) {
         console.error('Failed to load curriculums', err)
-        curriculums.value = []
+        this.curriculums = []
       }
-    }
-
-    onMounted(load)
-
-    const filteredCurriculums = computed(() => {
-      const list = Array.isArray(curriculums.value) ? curriculums.value : []
-      return list
-    })
-
-    function openNew() {
-      dialog.value = { show: true, mode: 'new', id: null }
-      form.value = { title: '', description: '' }
-    }
-
-    function closeDialog() {
-      dialog.value.show = false
-    }
-
-    function viewItem(row) {
-      viewDialog.value = { show: true, item: row }
-    }
-
-    function editItem(row) {
-      dialog.value = { show: true, mode: 'edit', id: row.id }
-      form.value = { title: row.title || '', description: row.description || '' }
-    }
-
-    async function removeItem(row) {
-      const id = row.id
+    },
+    openNew() {
+      this.dialog = { show: true, mode: 'new', id: null }
+      this.selectedCountry = null
+      this.form = { title: '', description: '', country_code: '', country: '' }
+    },
+    closeDialog() {
+      this.dialog.show = false
+    },
+    viewItem(row) {
+      this.viewDialog = { show: true, item: row }
+    },
+    editItem(row) {
+      this.dialog = { show: true, mode: 'edit', id: row._id }
+      this.selectedCountry = row.country_code || null
+      this.form = {
+        title: row.title || '',
+        description: row.description || '',
+        country_code: row.country_code || '',
+        country: row.country || ''
+      }
+    },
+    async removeItem(row) {
+      const id = row._id
       if (!id) return
       if (!confirm('Delete this curriculum?')) return
       try {
         await curriculumsService.deleteCurriculum(id)
-        await load()
+        await this.load()
       } catch (err) {
         console.error('Failed to delete', err)
       }
-    }
-
-    async function save() {
+    },
+    async save() {
       const payload = {
-        title: form.value.title,
-        description: form.value.description
+        title: this.form.title,
+        description: this.form.description,
+        country_code: this.form.country_code,
+        country: this.form.country
       }
 
       try {
-        if (dialog.value.mode === 'edit' && dialog.value.id) {
-          await curriculumsService.updateCurriculum(dialog.value.id, payload)
+        if (this.dialog.mode === 'edit' && this.dialog.id) {
+          await curriculumsService.updateCurriculum(this.dialog.id, payload)
         } else {
           await curriculumsService.createCurriculum(payload)
         }
-        dialog.value.show = false
-        await load()
+        this.dialog.show = false
+        await this.load()
       } catch (err) {
         console.error('Failed to save curriculum', err)
       }
     }
-
-    return {
-      curriculums,
-      columns,
-      dialog,
-      form,
-      openNew,
-      save,
-      editItem,
-      removeItem,
-      viewItem,
-      viewDialog,
-      filteredCurriculums,
-      closeDialog
-    }
   }
-})
+}
 </script>

@@ -1,9 +1,8 @@
 <template>
   <div class="col-12 col-sm-6 col-md-4">
-
-    <q-card to="/lessons/123" clickable class="q-ma-sm shadow-1">
-      <router-link :to="`/lessons/hhwhw`" style="text-decoration: none; color: inherit;">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" height="140px">
+    <q-card to="/lessons/123" clickable class="q-my-sm shadow-1">
+      <router-link :to="`/lessons/${lesson?.id}`" style="text-decoration: none; color: inherit;">
+        <q-img :src="lesson?.thumbnail" height="140px">
           <div class="absolute-full text-subtitle2 flex flex-center">
 
           </div>
@@ -15,43 +14,24 @@
           <div class="row items-center flex">
 
             <div class="text-body1 text-weight-medium ellipsis q-mr-sm">
-
-              Importance of maize in Malawi’s economy
+              {{
+                lesson?.title }}
             </div>
-
-
-
-
-            <!-- <q-space /> -->
-
-            <!-- <q-btn flat round dense icon="more_vert" /> -->
-
           </div>
-          <!-- <div class="row items-center q-gutter-sm">
-
-            <q-avatar size="40px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" width="30px">
-            </q-avatar>
-
-
-            <div class="column">
-              <div class="text-caption">Patrick Phandera</div>
-              <div class="text-caption">Teacher | <span>30k followers</span></div>
-            </div>
-
-          </div> -->
-
           <div class="text-caption flex">
-            <q-chip square class="text-caption " dense>MSCE</q-chip>
-            <q-chip square class="text-caption" dense>Agriculture </q-chip>
-            <q-chip square class="text-caption" dense>Book 3 </q-chip>
-            <q-chip square class="text-caption " dense>Topic 5</q-chip>
-            <q-chip square class="text-caption " dense>30K Views</q-chip><q-chip square class="text-caption " dense>5
+            <q-chip square class="text-caption " dense>{{
+              lesson?.curriculumId?.title }}</q-chip>
+            <q-chip square class="text-caption" dense>{{
+              lesson?.subjectId?.title }} </q-chip>
+            <q-chip square class="text-caption" dense v-if="lesson?.book">{{
+              lesson?.book }} </q-chip>
+            <q-chip square class="text-caption " dense>{{
+              lesson?.topicId.title }}</q-chip>
+            <!-- <q-chip square class="text-caption " dense>30K Views</q-chip> -->
 
-              Hours Ago</q-chip>
+            <q-chip square class="text-caption " dense>
+              {{ lesson?.timeAgo }}</q-chip>
           </div>
-
-
           <div class="flex q-my-xs row ">
             <div class="row q-gutter-sm">
               <q-avatar size="40px">
@@ -62,35 +42,20 @@
                 <div square class="text-caption text-grey-8" dense>30k Followers</div> <q-space />
               </div>
             </div>
-
             <q-space></q-space>
             <q-btn flat round dense icon="more_vert" />
-
           </div>
-
-          <div class="text-caption flex">
-
-          </div>
-
-
-
-
-
         </q-card-section>
-
       </div>
-
     </q-card>
-
-
   </div>
-
 </template>
 
 <script>
 import { ref } from 'vue'
 
 export default {
+  props: ['lesson'],
   setup() {
     return {
       expanded: ref(false),

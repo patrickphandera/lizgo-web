@@ -1,7 +1,6 @@
 <!-- eslint-disable vue/valid-v-for -->
 <template>
   <q-page class="q-mx-md q-mt-md ">
-
     <div class="text-h6 flex justify-between">
       <div class="flex">
         <router-link :to="`/lessons`" style="text-decoration: none; color: inherit;">
@@ -10,32 +9,37 @@
 
             </q-btn>
           </q-card>
-        </router-link> <span class="q-mx-md text-center text-body1">Important of maize in Malawi’s economy</span>
+        </router-link> <span class="q-mx-md text-center text-body1">{{ lesson.title }}</span>
       </div>
       <div>
-        <q-btn color="primary " class="text-capitalize shadow-0" label="Add Credits"
-          icon-right="add_shopping_cart"></q-btn>
+        <q-btn class="text-capitalize shadow-0" label="Add Credits" icon-right="add_shopping_cart"></q-btn>
       </div>
 
     </div>
-
     <div class="row q-my-md">
       <div class="col-10 q-pr-md">
-        <q-card class="video shadow-0">
 
-
-          <q-video black class="w-full video" src="/Emmie_Deebo_-_Muchile__Official_Music_Video_(720p).mp4"
-            height="400px" />
-
-          <q-card-section><span>SECTION 1 : Important of maize in Malawi’s economy</span></q-card-section>
+        <LearningSection v-if="!isLessonComplete && currentSection" :section="currentSection" :title="lesson.title">
+        </LearningSection>
+        <q-card v-else-if="isLessonComplete" class="q-pa-xl row justify-center items-center text-center video">
+          <div>
+            <q-icon name="check_circle" color="primary" size="64px" />
+            <div class="text-h6 q-mt-md">Lesson completed 🎉</div>
+            <div class="text-caption">You’ve finished all sections</div>
+          </div>
         </q-card>
+
+        <div class="row justify-end q-mt-sm">
+          <q-btn icon="mdi-skip-previous" :disable="currentSectionIndex === 0" @click="previousSection" />
+
+          <q-btn icon="mdi-skip-next" :disable="isLessonComplete" @click="nextSection" />
+        </div>
         <q-card bordered flat class="
             q-mt-md">
           <q-card-section class="text-h6">
             <div>
               Comments
             </div>
-
             <q-item>
               <q-item-section avatar>
                 <q-avatar>
@@ -68,77 +72,151 @@
             </q-item>
           </q-card-section>
         </q-card>
+
+
       </div>
 
-      <q-card class="col-2 q-px-md shadow-0" bordered>
-        <q-timeline color="primary">
-          <q-timeline-entry icon="check" class="text-capitalize" subtitle="Section 1">
-            <template v-slot:subtitle>
-              <div class="text-body2 text-capitalize text-black">
-                Section Title
+      <q-card class="col-2 q-px-md shadow-1">
+        <q-timeline color="grey-12">
+          <q-timeline-entry v-for="(section, index) in lesson.sections" :key="section.id"
+            :icon="getSectionIcon(section, index)" :color="getSectionColor(section, index)">
+            <template #title>
+              <div class="text-body2 text-black">
+                {{ section.title }}
               </div>
             </template>
-            <div>
-              Important of maize in Malawi’s economy
-            </div>
-          </q-timeline-entry>
 
-          <q-timeline-entry subtitle="Section 2" icon="lock">
-            <template v-slot:subtitle>
-              <div class="text-body2 text-capitalize text-black">
-                Section Title
+            <template #subtitle>
+              <div class="text-caption">
+                {{ section.description }}
               </div>
             </template>
-            <div>
-              Important of maize in Malawi’s economy.
-            </div>
-          </q-timeline-entry>
-
-
-
-          <q-timeline-entry icon="lock" subtitle="Section 3">
-            <template v-slot:subtitle>
-              <div class="text-body2 text-capitalize text-black">
-                Section Title
-              </div>
-            </template>
-            <div>
-              Important of maize in Malawi’s economy.
-            </div>
-          </q-timeline-entry>
-          <q-timeline-entry icon="lock" subtitle="Section 3">
-            <template v-slot:subtitle>
-              <div class="text-body2 text-capitalize text-black">
-                Section Title
-              </div>
-            </template>
-            <div>
-              Important of maize in Malawi’s economy.
-            </div>
-          </q-timeline-entry>
-          <q-timeline-entry icon="lock" subtitle="Section 3">
-            <template v-slot:subtitle>
-              <div class="text-body2 text-capitalize text-black">
-                Section Title
-              </div>
-            </template>
-            <div>
-              Important of maize in Malawi’s economy.
-            </div>
           </q-timeline-entry>
         </q-timeline>
+
       </q-card>
-
-
     </div>
 
   </q-page>
 </template>
-
 <script>
+import LearningSection from '../components/LearningSection.vue'
 import { defineComponent } from 'vue'
+import LessonsService from '../services/lessons.service'
+
 export default defineComponent({
   name: 'IndexPage',
+  components: { LearningSection },
+
+  data() {
+    return {
+      text: '',
+      completedSections: new Set(
+        JSON.parse(localStorage.getItem(`lesson-${this.$route.params.id}-progress`) || '[]')
+      ),
+
+      lesson: {
+
+        title: '',
+        sections: []
+      },
+      currentSection: null,
+      currentSectionIndex: 0
+    }
+  },
+  watch: {
+    completedSections: {
+      handler(newSet) {
+        localStorage.setItem(
+          `lesson-${this.$route.params.id}-progress`,
+          JSON.stringify([...newSet])
+        )
+      },
+      deep: true
+    }
+  }
+  ,
+  async mounted() {
+    const lessonId = this.$route.params.id
+
+    try {
+      const lesson = await LessonsService.getLessonDetails(lessonId)
+
+      this.lesson = lesson
+      this.currentSectionIndex = 0
+      await this.loadSection()
+    } catch (err) {
+      console.error('Error fetching lesson:', err)
+    }
+  },
+  computed: {
+    isLessonComplete() {
+      return this.currentSectionIndex >= this.lesson.sections.length
+    }
+  },
+  methods: {
+    isCompleted(section) {
+      return this.completedSections.has(section.id)
+    },
+
+    isCurrent(index) {
+      return index === this.currentSectionIndex
+    },
+
+    getSectionIcon(section, index) {
+      if (this.isCompleted(section)) return 'check_circle'
+      if (this.isCurrent(index)) return 'play_circle'
+      return 'lock'
+    },
+
+    getSectionColor(section, index) {
+      if (this.isCompleted(section)) return 'primary'
+      if (this.isCurrent(index)) return 'primary'
+      return 'grey-6'
+    },
+
+    async loadSection() {
+      if (this.currentSectionIndex >= this.lesson.sections.length) return
+      const lessonId = this.$route.params.id
+      const section = this.lesson.sections[this.currentSectionIndex]
+
+      const sectionDetails = await LessonsService.getLessonDetails(
+        `${lessonId}/section/${section.id}`
+      )
+
+      this.currentSection = {
+        ...section,
+        ...sectionDetails
+      }
+    },
+    async nextSection() {
+      // mark current as completed
+      this.completedSections.add(
+        this.lesson.sections[this.currentSectionIndex].id
+      )
+
+      // Move to next section
+      this.currentSectionIndex++
+
+      // Check if we've completed all sections
+      if (this.currentSectionIndex >= this.lesson.sections.length) {
+        this.currentSection = null
+        return
+      }
+
+      // Load the next section
+      await this.loadSection()
+    }
+    ,
+
+    async previousSection() {
+      if (this.currentSectionIndex === 0) return
+
+      this.currentSectionIndex--
+      await this.loadSection()
+    }
+  }
+
 })
 </script>
 <style scoped>

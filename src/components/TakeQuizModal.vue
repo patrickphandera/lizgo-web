@@ -1,10 +1,10 @@
 <template>
   <div>
-
-    <!-- Trigger button (optional, can remove) -->
-    <q-btn unelevated color="primary" @click="open = true" class="text-capitalize full-width shadow-0"
-      label="Start Quiz" />
-
+    <div>
+      <!-- Trigger button (optional, can remove) -->
+      <q-btn icon-right="mdi-chevron-right" unelevated color="primary" @click="open = true"
+        class="text-capitalize text-caption shadow-0" label="Start Quiz" />
+    </div>
     <!-- QUIZ MODAL -->
     <q-dialog v-model="open" persistent class="full-height full-width">
       <q-card style="width: 1200px; max-width: 100vw">

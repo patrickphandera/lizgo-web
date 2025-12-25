@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 col-sm-6 col-md-4">
-    <q-card class="rounded-xl" bordered flat>
+    <q-card class="rounded-xl">
 
       <!-- Body -->
       <q-card-section>
@@ -12,7 +12,7 @@
           Test your understanding of algebra fundamentals
         </div>
 
-        <div class="row  q-gutter-sm q-mt-md">
+        <div class="row  q-gutter-sm q-mt-sm">
 
           <q-chip dense square flat text-color="black" class="text-caption ">
             Mathematics
@@ -28,15 +28,25 @@
           <q-chip dense text-color="black" class="text-caption ">
             ⏱ 30 mins
           </q-chip>
+          <q-chip square dense>
+            <div class="text-caption">
+              Top Performer : 60%
+            </div>
+          </q-chip>
+          <q-chip square dense>
+            <div class="text-caption">
+              Your score : 60%
+            </div>
+          </q-chip>
         </div>
       </q-card-section>
 
       <!-- <q-separator /> -->
 
       <!-- Actions -->
-      <div class="row q-pa-sm row justify-between">
+      <div class="row q-pb-md q-px-md row justify-left">
         <div class="text-body1">
-          60%
+
         </div>
         <q-btn unelevated icon="refresh" color="primary" class="text-capitalize text-caption" label="Retake" />
       </div>

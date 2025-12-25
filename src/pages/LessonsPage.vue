@@ -1,44 +1,66 @@
 <template>
-  <q-page class="q-px-md">
+  <q-page class="">
+    <!-- <div class="q-mt-sm q-mx-sm">
+      <q-breadcrumbs class="text-grey" active-color="purple">
+        <template v-slot:separator>
+          <q-icon size="1.2em" name="arrow_forward" color="purple" />
+        </template>
 
-    <q-option-group class="text-caption" v-model="panel" inline :options="[
-      { label: 'All', value: 'all' }, ,
-      { label: 'Mathematics', value: 'Mathematics' },
-      { label: 'English', value: 'English' },
-      { label: 'Physics', value: 'Physics' },
-      { label: 'Chemistry', value: 'Chemistry' },
-      { label: 'Biology', value: 'Biology' },
-      { label: 'Science & Technology', value: 's&t' },
-      { label: 'Agriculture', value: 'Agriculture' },
-      { label: 'Home Economics', value: 'h&e' },
-      { label: 'French', value: 'French' },
-    ]" />
-    <AddLessonPage></AddLessonPage>
+<q-breadcrumbs-el label="Home" icon="home" />
+<q-breadcrumbs-el label="Components" icon="widgets" />
+<q-breadcrumbs-el label="Breadcrumbs" icon="navigation" />
+</q-breadcrumbs>
+</div> -->
 
-    <div class="row">
-      <LessonFirstCard v-for="n in 3" :key="n"></LessonFirstCard>
+
+    <div class="q-mx-sm q-mt-xs row no-wrap scroll-x q-gutter-md hide-scrollbar">
+      <q-chip square color="primary shadow-2" class="text-white">All</q-chip>
+      <q-chip square class="shadow-0"
+        v-for="n in ['Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Science & Technology', 'Agriculture', 'Home Economics', 'Physics', 'Chemistry', 'Life Skills', 'French', 'Chichewa', 'Wood Work', 'Metal Work']"
+        :key="n">
+        {{ n }}
+      </q-chip>
+    </div>
+
+
+
+    <div class="row q-col-gutter-md grid-auto q-px-lg">
+      <LessonFirstCard v-for="lesson in lessons"  :key="lesson.id" :lesson="lesson"></LessonFirstCard>
     </div>
     <div class="text-h6 q-mx-md text-weight-bold">
     </div>
-    <div class="row">
-      <LessonFirstCard v-for="n in 3" :key="n"></LessonFirstCard>
+    <div class="row q-col-gutter-md grid-auto q-px-lg">
+      <LessonFirstCard v-for="lesson in lessons"  :key="lesson.id" :lesson="lesson"></LessonFirstCard>
     </div>
   </q-page>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
 import LessonFirstCard from 'src/components/LessonFirstCard.vue'
-import AddLessonPage from '../components/AddLessonPage.vue'
-export default defineComponent({
+import lessonsService from 'src/services/lessons.service'
+export default {
   components: {
-    LessonFirstCard, AddLessonPage
-  },
-  data() {
-    return {
-      panel: 'all'
-    }
+    LessonFirstCard,
   },
   name: 'IndexPage',
-})
+
+data() {
+  return {
+    lessons: []
+  } 
+},
+async mounted() {
+  this.loadData()
+},
+methods: {
+  async loadData(){
+    try {
+      const lessons = await lessonsService.getAll()
+      this.lessons = lessons
+    } catch (err) {
+      console.log(err)
+    }
+  }
+}
+}
 </script>

@@ -102,6 +102,31 @@ const linksList = [
     link: '/admin',
   },
   {
+    title: 'Students',
+    icon: 'mdi-account-multiple',
+    link: '/admin/students',
+  },
+  {
+    title: 'Curriculums',
+    icon: 'mdi-currency-eth',
+    link: '/admin/curriculums',
+  },
+  {
+    title: 'Levels',
+    icon: 'mdi-filter-variant',
+    link: '/admin/levels',
+  },
+  {
+    title: 'Subjects',
+    icon: 'mdi-text-long',
+    link: '/admin/subjects',
+  },
+  {
+    title: 'Topics',
+    icon: 'mdi-text-box-multiple',
+    link: '/admin/topics',
+  },
+  {
     title: 'Lessons',
     icon: 'mdi-youtube',
     link: '/admin/lessons',
@@ -115,26 +140,6 @@ const linksList = [
     title: 'Discussions',
     icon: 'mdi-account-group',
     link: '/admin/discussions',
-  },
-    {
-    title: 'Curriculums',
-    icon: 'mdi-currency-eth',
-    link: '/admin/curriculums',
-  },
-    {
-    title: 'Levels',
-    icon: 'mdi-filter-variant',
-    link: '/admin/levels',
-  },
-    {
-    title: 'Topics',
-    icon: 'mdi-text-box-multiple',
-    link: '/admin/topics',
-  },
-    {
-    title: 'Subjects',
-    icon: 'mdi-text-long',
-    link: '/admin/subjects',
   }
 ]
 

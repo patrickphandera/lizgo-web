@@ -11,11 +11,13 @@ class LessonsService extends BaseDbService {
   async getLessonsWithSections(params = {}) {
     try {
       const response = await this.rest.get(`${this.endpoint}?populate=sections`, {
-        params
+        params,
       })
+
+      console.log(response)
       return Array.isArray(response) ? response : response.data || response
     } catch (error) {
-      console.error('Failed to fetch lessons with sections:', error)
+      console.log('Failed to fetch lessons with sections:', error)
       throw error
     }
   }
@@ -23,7 +25,7 @@ class LessonsService extends BaseDbService {
   // Get lesson by ID with full details
   async getLessonDetails(id) {
     try {
-      const response = await this.rest.get(`${this.endpoint}/${id}?populate=sections,author,subject`)
+      const response = await this.rest.get(`${this.endpoint}/${id}`)
       return response.data || response
     } catch (error) {
       console.error(`Failed to fetch lesson ${id}:`, error)
@@ -99,10 +101,7 @@ class LessonsService extends BaseDbService {
   // Add section to lesson
   async addSection(lessonId, section) {
     try {
-      const response = await this.rest.post(
-        `${this.endpoint}/${lessonId}/sections`,
-        section
-      )
+      const response = await this.rest.post(`${this.endpoint}/${lessonId}/sections`, section)
       this.invalidateCache(`getById_${lessonId}`)
       return response.data || response
     } catch (error) {
@@ -115,15 +114,12 @@ class LessonsService extends BaseDbService {
   async removeSection(lessonId, sectionIndex) {
     try {
       const response = await this.rest.delete(
-        `${this.endpoint}/${lessonId}/sections/${sectionIndex}`
+        `${this.endpoint}/${lessonId}/sections/${sectionIndex}`,
       )
       this.invalidateCache(`getById_${lessonId}`)
       return response.data || response
     } catch (error) {
-      console.error(
-        `Failed to remove section from lesson ${lessonId}:`,
-        error
-      )
+      console.error(`Failed to remove section from lesson ${lessonId}:`, error)
       throw error
     }
   }
@@ -133,15 +129,12 @@ class LessonsService extends BaseDbService {
     try {
       const response = await this.rest.patch(
         `${this.endpoint}/${lessonId}/sections/${sectionIndex}`,
-        section
+        section,
       )
       this.invalidateCache(`getById_${lessonId}`)
       return response.data || response
     } catch (error) {
-      console.error(
-        `Failed to update section in lesson ${lessonId}:`,
-        error
-      )
+      console.error(`Failed to update section in lesson ${lessonId}:`, error)
       throw error
     }
   }
@@ -149,10 +142,7 @@ class LessonsService extends BaseDbService {
   // Publish lesson
   async publishLesson(id) {
     try {
-      const response = await this.rest.patch(
-        `${this.endpoint}/${id}`,
-        { published: true }
-      )
+      const response = await this.rest.patch(`${this.endpoint}/${id}`, { published: true })
       this.invalidateCache(`getById_${id}`)
       this.invalidateCache('getAll')
       return response.data || response
@@ -165,10 +155,7 @@ class LessonsService extends BaseDbService {
   // Archive lesson
   async archiveLesson(id) {
     try {
-      const response = await this.rest.patch(
-        `${this.endpoint}/${id}`,
-        { archived: true }
-      )
+      const response = await this.rest.patch(`${this.endpoint}/${id}`, { archived: true })
       this.invalidateCache(`getById_${id}`)
       this.invalidateCache('getAll')
       return response.data || response

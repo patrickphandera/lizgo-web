@@ -14,13 +14,18 @@
         <q-select v-model="filterCurriculum" :options="curriculumOptions" option-label="label" option-value="value"
           label="Filter by curriculum" dense outlined clearable />
 
-        <q-table class="q-mt-md" :rows="filteredLevels" :columns="columns" row-key="id">
-          <!-- Curriculum column -->
-          <template v-slot:body-cell-curriculum="props">
-            <q-td align="right">
-              {{ props.row.curriculumId.label }}
-            </q-td>
-          </template>
+        <q-table
+  class="q-mt-md"
+  :rows="filteredLevels"
+  :columns="columns"
+  row-key="_id"
+>
+        <template v-slot:body-cell-curriculum="props">
+  <q-td>
+    {{ curriculumMap[props.row.curriculumId] || '-' }}
+  </q-td>
+</template>
+
 
 
           <!-- Actions -->
@@ -36,7 +41,8 @@
     </div>
 
     <!-- CREATE / EDIT DIALOG -->
-    <q-dialog v-model="dialog.show">
+ <q-dialog v-model="dialog.show">
+
       <q-card style="min-width: 400px; max-width: 700px">
         <q-card-section class="row justify-between items-center">
           <div class="text-h6">
@@ -106,124 +112,129 @@
     </q-dialog>
   </q-page>
 </template>
-
 <script>
-import { defineComponent, ref, computed, onMounted } from 'vue'
 import levelsService from 'src/services/levels.service'
 import curriculumsService from 'src/services/curriculums.service'
 
-export default defineComponent({
+export default {
   name: 'LevelAdminPage',
 
-  setup() {
-    const levels = ref([])
-    const curricula = ref([])
-    const filterCurriculum = ref(null)
+  data () {
+    return {
+      levels: [],
+      curricula: [],
+      filterCurriculum: null,
 
-    const curriculumOptions = ref([])
-    const curriculumMap = {}
+      curriculumOptions: [],
+      curriculumMap: {},
 
-    const columns = [
-      { name: 'title', label: 'Title', field: 'title', align: 'left', sortable: true },
-      { name: 'curriculum', label: 'Curriculum', field: 'curriculum', sortable: true },
-      { name: 'description', label: 'Description', field: 'description', sortable: true },
-      { name: 'actions', label: 'Actions', field: 'actions' }
-    ]
+      columns: [
+        { name: 'title', label: 'Title', field: 'title', sortable: true },
+        { name: 'curriculum', label: 'Curriculum', field: 'curriculumId' },
+        { name: 'description', label: 'Description', field: 'description' },
+        { name: 'actions', label: 'Actions' }
+      ],
 
-    const dialog = ref({ show: false, mode: 'new', id: null })
-    const viewDialog = ref({ show: false, item: {} })
+      dialog: {
+        show: false,
+        mode: 'new',
+        id: null
+      },
 
-    const form = ref({
-      title: '',
-      curriculumId: null,
-      description: ''
-    })
+      viewDialog: {
+        show: false,
+        item: {}
+      },
 
-    /* LOAD DATA */
-    const load = async () => {
+      form: {
+        title: '',
+        curriculumId: null,
+        description: ''
+      }
+    }
+  },
+
+  created () {
+    this.load()
+  },
+
+  computed: {
+    filteredLevels () {
+      if (!this.filterCurriculum || this.filterCurriculum === 'ALL') {
+        return this.levels
+      }
+
+      return this.levels.filter(
+        l => String(l.curriculumId) === String(this.filterCurriculum)
+      )
+    }
+  },
+
+  methods: {
+    async load () {
       const [levelsRes, curriculaRes] = await Promise.all([
         levelsService.list(),
         curriculumsService.list()
       ])
 
-      levels.value = levelsRes?.data || levelsRes || []
-      curricula.value = curriculaRes?.data || curriculaRes || []
+      this.levels = levelsRes
+      this.curricula = curriculaRes
 
-      curriculumOptions.value = [
+      this.curriculumMap = {}
+      this.curriculumOptions = [
         { label: 'All', value: 'ALL' },
-        ...curricula.value.map(c => {
-          curriculumMap[String(c.id)] = c.title
-          return { label: c.title, value: String(c.id) }
+        ...this.curricula.map(c => {
+          this.curriculumMap[c._id] = c.title
+          return { label: c.title, value: c._id }
         })
       ]
-    }
+    },
 
-    onMounted(load)
-
-    /* FILTER */
-    const filteredLevels = computed(() => {
-      if (!filterCurriculum.value || filterCurriculum.value === 'ALL') {
-        return levels.value
+    openNew () {
+      this.dialog = { show: true, mode: 'new', id: null }
+      this.form = {
+        title: '',
+        curriculumId: null,
+        description: ''
       }
-      return levels.value.filter(
-        l => String(l.curriculumId) === String(filterCurriculum.value)
-      )
-    })
+    },
 
-    /* CRUD */
-    function openNew() {
-      dialog.value = { show: true, mode: 'new', id: null }
-      form.value = { title: '', curriculumId: null, description: '' }
-    }
+    editItem (row) {
+      this.dialog = { show: true, mode: 'edit', id: row._id }
+      this.form = {
+        title: row.title,
+        curriculumId: row.curriculumId,
+        description: row.description
+      }
+    },
 
-    function editItem(row) {
-      dialog.value = { show: true, mode: 'edit', id: row.id }
-      form.value = { ...row }
-    }
+    closeDialog () {
+      this.dialog.show = false
+    },
 
-    function closeDialog() {
-      dialog.value.show = false
-    }
+    viewItem (row) {
+      this.viewDialog = { show: true, item: row }
+    },
 
-    function viewItem(row) {
-      viewDialog.value = { show: true, item: row }
-    }
+    async removeItem (row) {
+      if (!row._id || !confirm('Delete this level?')) return
+      await levelsService.deleteLevel(row._id)
+      await this.load()
+    },
 
-    async function removeItem(row) {
-      if (!row.id || !confirm('Delete this level?')) return
-      await levelsService.deleteLevel(row.id)
-      await load()
-    }
+    async save () {
+      const payload = { ...this.form }
 
-    async function save() {
-      const payload = { ...form.value }
-
-      if (dialog.value.mode === 'edit') {
-        await levelsService.updateLevel(dialog.value.id, payload)
+      if (this.dialog.mode === 'edit') {
+        await levelsService.updateLevel(this.dialog.id, payload)
       } else {
+        payload.curriculumId=payload.curriculumId.value
         await levelsService.createLevel(payload)
       }
 
-      dialog.value.show = false
-      await load()
-    }
-
-    return {
-      columns,
-      curriculumOptions,
-      curriculumMap,
-      filterCurriculum,
-      filteredLevels,
-      dialog,
-      viewDialog,
-      form,
-      openNew,
-      editItem,
-      viewItem,
-      removeItem,
-      save,
-      closeDialog
+      this.dialog.show = false
+      await this.load()
     }
   }
-})
+}
 </script>

@@ -1,60 +1,41 @@
 <template>
-  <q-page class="q-pa-md">
-
-    <!-- Subject Filter -->
-
-    <div>
-      <q-option-group class="text-caption q-mx-sm" dense v-model="panel" inline :options="[
-        { label: 'Completed', value: 'Completed' }, { label: 'Unattempted', value: 'available' }
-      ]" />
+  <q-page class="q-px-md ">
+    <div class="q-mt-xs q-mb-md row no-wrap scroll-x q-gutter-md hide-scrollbar">
+      <q-chip dense square color="primary shadow-2" class="text-white">All</q-chip>
+      <q-chip dense square class="shadow-0"
+        v-for="n in ['Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Science & Technology', 'Agriculture', 'Home Economics', 'Physics', 'Chemistry', 'Life Skills', 'French', 'Chichewa', 'Wood Work', 'Metal Work']"
+        :key="n">
+        {{ n }}
+      </q-chip>
     </div>
-    <q-tab-panels v-model="panel" animated class="shadow-0 rounded-borders ">
-      <q-tab-panel name="available">
-        <div class="row q-col-gutter-md">
-          <UnAttemptedQuizCard v-for="n in 6" :key="'ongoing-' + n" />
-        </div>
-
-      </q-tab-panel>
-
-      <q-tab-panel name="Completed">
-        <div class="row q-col-gutter-md">
-          <CompletedQuizCard v-for="n in 6" :key="'ongoing-' + n" />
-        </div>
-      </q-tab-panel>
-    </q-tab-panels>
 
 
+    <div class="row q-gutter-md">
+      <UnAttemptedQuizCard></UnAttemptedQuizCard>
+      <CompletedQuizCard></CompletedQuizCard>
+    </div>
 
 
   </q-page>
 </template>
-
 <script>
-import { defineComponent } from 'vue'
-import UnAttemptedQuizCard from 'src/components/UnAttemptedQuizCard.vue'
-
-import { ref } from 'vue'
-import CompletedQuizCard from 'src/components/CompletedQuizCard.vue';
+import { defineComponent, ref } from 'vue'
+import UnAttemptedQuizCard from '../components/UnAttemptedQuizCard.vue'
+import CompletedQuizCard from '../components/CompletedQuizCard.vue'
 export default defineComponent({
   name: 'QuizzesPage',
-  components: {
-    CompletedQuizCard,
-    UnAttemptedQuizCard
-  },
+  components: { UnAttemptedQuizCard, CompletedQuizCard },
   setup() {
+    const panel = ref('available')
+
+
+    const unattemptedCount = 6
+    const completedCount = 3
+
     return {
-      panel: ref('Completed'),
-      subjects: [
-        'Mathematics',
-        'English',
-        'Physics',
-        'Chemistry',
-        'Biology',
-        'Science & Technology',
-        'Agriculture',
-        'Life Skills',
-        'French'
-      ]
+      panel,
+      unattemptedCount,
+      completedCount
     }
   }
 })

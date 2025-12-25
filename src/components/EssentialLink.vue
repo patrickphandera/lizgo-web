@@ -1,11 +1,15 @@
 <template>
-  <q-item class="row justify-center">
+  
+      <q-item clickable v-ripple>
+          <q-item-section avatar>
+          <q-icon  :name="icon" />
+        </q-item-section>
+        <q-item-section>
+          {{ title }}
+        </q-item-section>
+       
+      </q-item>
 
-    <router-link :to="`${link}`" style="text-decoration: none; color: inherit;">
-      <q-btn unelevated round :icon="icon" :class="route.path === link ? 'text-white' : 'text-black'"
-        :color="route.path === link ? 'primary' : 'grey-1'" />
-    </router-link>
-  </q-item>
 </template>
 
 <script>
@@ -19,17 +23,14 @@ export default defineComponent({
       type: String,
       required: true,
     },
-
     caption: {
       type: String,
       default: '',
     },
-
     link: {
       type: String,
       default: '#',
     },
-
     icon: {
       type: String,
       default: '',
@@ -38,6 +39,12 @@ export default defineComponent({
   data() {
     return {
       route: useRoute(),
+    }
+  },
+  computed: {
+    isActive() {
+      // Check if current path starts with the link
+      return this.route.path.startsWith(this.link)
     }
   }
 })
