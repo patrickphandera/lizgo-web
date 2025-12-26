@@ -11,11 +11,10 @@ class AuthService {
   }
 
   // Login user with email and password
-  async login(email, password) {
+  async login(data) {
     try {
       const response = await this.rest.post('/auth/login', {
-        email,
-        password,
+        ...data,
       })
 
       this.setAuthData(response)
@@ -29,7 +28,7 @@ class AuthService {
   // Register new user
   async register(userData) {
     try {
-      const response = await this.rest.post('/api/auth/register', userData)
+      const response = await this.rest.post('/auth/register', userData)
       return response
     } catch (error) {
       console.error('Registration failed:', error)
@@ -40,7 +39,7 @@ class AuthService {
   // Logout user
   async logout() {
     try {
-      await this.rest.post('/api/auth/logout', {})
+      await this.rest.post('/auth/logout', {})
       this.clearAuthData()
     } catch (error) {
       console.error('Logout failed:', error)
@@ -52,7 +51,7 @@ class AuthService {
   // Refresh authentication token
   async refreshToken() {
     try {
-      const response = await this.rest.post('/api/auth/refresh', {})
+      const response = await this.rest.post('/auth/refresh', {})
       this.setAuthData(response)
       this.scheduleTokenRefresh()
       return response
@@ -66,7 +65,7 @@ class AuthService {
   // Verify email with token
   async verifyEmail(token) {
     try {
-      const response = await this.rest.post('/api/auth/verify-email', { token })
+      const response = await this.rest.post('/auth/verify-email', { token })
       return response
     } catch (error) {
       console.error('Email verification failed:', error)
@@ -77,7 +76,7 @@ class AuthService {
   // Request password reset
   async requestPasswordReset(email) {
     try {
-      const response = await this.rest.post('/api/auth/request-password-reset', {
+      const response = await this.rest.post('/auth/request-password-reset', {
         email,
       })
       return response
@@ -90,7 +89,7 @@ class AuthService {
   // Reset password with token
   async resetPassword(token, newPassword) {
     try {
-      const response = await this.rest.post('/api/auth/reset-password', {
+      const response = await this.rest.post('/auth/reset-password', {
         token,
         newPassword,
       })
@@ -104,7 +103,7 @@ class AuthService {
   // Change password for authenticated user
   async changePassword(currentPassword, newPassword) {
     try {
-      const response = await this.rest.patch('/api/auth/change-password', {
+      const response = await this.rest.patch('/auth/change-password', {
         currentPassword,
         newPassword,
       })
@@ -118,7 +117,7 @@ class AuthService {
   // Get current user profile
   async getCurrentUser() {
     try {
-      const response = await this.rest.get('/api/auth/me')
+      const response = await this.rest.get('/auth/me')
       this.currentUser = response.data || response
       this.isAuthenticated = true
       return this.currentUser
@@ -133,7 +132,7 @@ class AuthService {
   // Update user profile
   async updateProfile(userData) {
     try {
-      const response = await this.rest.patch('/api/auth/profile', userData)
+      const response = await this.rest.patch('/auth/profile', userData)
       this.currentUser = response.data || response
       return this.currentUser
     } catch (error) {
@@ -145,7 +144,7 @@ class AuthService {
   // Upload profile picture
   async uploadProfilePicture(file) {
     try {
-      const response = await this.rest.uploadFile('/api/auth/profile-picture', file)
+      const response = await this.rest.uploadFile('/auth/profile-picture', file)
       return response
     } catch (error) {
       console.error('Profile picture upload failed:', error)
@@ -155,9 +154,9 @@ class AuthService {
 
   // Set authentication data from login/refresh response
   setAuthData(data) {
-    const token = data.access_token || data.token
-    const user = data.user || data
-
+    const token = data.token
+    const user = data.response
+    console.log('Setting auth data:', {user})
     if (token) {
       this.rest.setToken(token)
       this.isAuthenticated = true
@@ -237,8 +236,8 @@ class AuthService {
       const jsonPayload = decodeURIComponent(
         atob(base64)
           .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(''),
       )
       return JSON.parse(jsonPayload)
     } catch (error) {

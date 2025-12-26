@@ -1,11 +1,10 @@
 <template>
   <div class="col-12 col-sm-6 col-md-4">
-    <q-card to="/lessons/123" clickable class="q-my-sm shadow-1">
+    <q-card  clickable class="q-my-sm shadow-1">
       <router-link :to="`/lessons/${lesson?.id}`" style="text-decoration: none; color: inherit;">
         <q-img :src="lesson?.thumbnail" height="140px">
           <div class="absolute-full text-subtitle2 flex flex-center">
-
-          </div>
+          </div>  
         </q-img>
       </router-link>
 

@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-pa-md">
+    <PersonalChat conversation-id="UUID-OF-CONVERSATION" />
     <div class="text-h6 flex justify-between">
       <div class="flex">
         <router-link :to="`/quizzes`" style="text-decoration: none; color: inherit;">
@@ -33,15 +34,17 @@
     </div>
 
 
+
   </q-page>
 </template>
 <script>
+  import PersonalChat from '../components/PersonalChat.vue'
 import { defineComponent, ref } from 'vue'
 import UnAttemptedQuizCard from '../components/UnAttemptedQuizCard.vue'
 import CompletedQuizCard from '../components/CompletedQuizCard.vue'
 export default defineComponent({
   name: 'QuizzesPage',
-  components: { UnAttemptedQuizCard, CompletedQuizCard },
+  components: { UnAttemptedQuizCard, CompletedQuizCard,PersonalChat },
   setup() {
     const panel = ref('available')
 

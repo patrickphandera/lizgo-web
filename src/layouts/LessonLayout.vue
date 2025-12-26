@@ -2,27 +2,16 @@
   <q-layout view="hHh Lpr lff">
     <q-header  class="q-py-xs" elevated>
       <q-toolbar>
-     
+
         <q-btn flat  round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" size="md" class="text-white" />
         <div class="text-weight-bold q-ml-md text-body1 text-capitalize text-black">
-           <!-- <q-avatar>
-          <img src="/Zoe Logo-1.jpg" alt="">
-        </q-avatar>  -->
-        
-        
-        
+
+
+
+
         </div>
-        <q-toolbar-title class="text-weight-bold text-white text-capitalize text-h6 ">Lessons</q-toolbar-title>
-        <!-- <div class="absolute-center row items-center q-gutter-md q-pt-md" style="max-width: 900px; width: 100%;">
-          <q-card class="shadow-0 q-mt-md " style="flex: 2; min-width: 300px;">
-            <q-input dense outlined v-model="text" label="Search Lessons" style="width: 100%;">
-              <template v-slot:prepend>
-                <q-icon dense unelevated name="
-                  search" />
-              </template>
-            </q-input>
-          </q-card>
-        </div> -->
+        <q-toolbar-title class="text-weight-bold text-white text-capitalize text-overline ">LESSONS</q-toolbar-title>
+
         <div>
 
           <div>

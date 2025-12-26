@@ -1,8 +1,8 @@
 import BaseDbService from './base.db.service.js'
 
-class TopicsService extends BaseDbService {
+class SubscriptionPlansService extends BaseDbService {
   constructor() {
-    super('/topics')
+    super('/subscription-plans')
   }
 
   async list(params = {}) {
@@ -79,4 +79,4 @@ class TopicsService extends BaseDbService {
   }
 }
 
-export default new TopicsService()
+export default new SubscriptionPlansService()

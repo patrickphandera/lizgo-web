@@ -25,7 +25,11 @@
 
           <div>
 
-
+<personal-chat-dialog
+    v-model="open"
+    :conversation-id="conversationId"
+  />
+   <q-btn label="Open Chat" @click="open = true" />
             <q-btn color="grey-1" round icon="notifications" class="q-mx-sm text-black" unelevated>
               <q-badge color="red" floating>4</q-badge>
             </q-btn>
@@ -63,22 +67,16 @@
 
 
     </q-header>
-    <q-drawer class="shadow-2" :width="100" behavior="desktop" v-model="leftDrawerOpen" show-if-above>
+    <q-drawer :class="$q.dark.isActive ? 'bg-grey-9 q-mb-md' : 'bg-grey-3 q-mb-md'" bordered :width="140" behavior="mobile" v-model="leftDrawerOpen" show-if-above>
       <q-list class="row justify-center q-mt-xs q-mb-xs">
-        <q-avatar class="shadow-3">
-          <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-        </q-avatar>
-      </q-list>
-      <!-- <q-separator class="q-mx-lg"></q-separator> -->
-      <q-list>
 
+      </q-list>
+
+      <q-list>
 
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
-      <!-- <q-list class="">
-        <q-item-label header>Essential Actions </q-item-label>
-      </q-list> -->
-      <!-- <AddLessonPage></AddLessonPage> -->
+
     </q-drawer>
 
     <q-page-container>
@@ -117,17 +115,19 @@ const linksList = [
     link: '/discussions',
   }
 ]
-
+import PersonalChatDialog from 'src/components/PersonalChatDialog.vue'
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
     // AddLessonPage,
-    EssentialLink,
+    EssentialLink,PersonalChatDialog
   },
 
   data() {
     return {
+        open: false,
+      conversationId: 'UUID-HERE',
       categories: ['All'],
       levels: ['All'],
       linksList,

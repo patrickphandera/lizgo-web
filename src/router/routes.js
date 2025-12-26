@@ -4,7 +4,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: 'register', component: () => import('pages/RegisterPage.vue') },
+      { path: 'register', component: () => import('pages/auth/RegisterPage.vue') },
       {
         path: 'register-extra',
         component: () => import('pages/ExtraInformationRegisterationPage.vue'),
@@ -14,7 +14,7 @@ const routes = [
   {
     path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
-    children: [{ path: '', component: () => import('pages/LoginPage.vue') }],
+    children: [{ path: '', component: () => import('pages/auth/LoginPage.vue') }],
   },
   {
     path: '/home',

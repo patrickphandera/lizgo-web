@@ -1,36 +1,25 @@
 <template>
   <q-page class="">
-    <!-- <div class="q-mt-sm q-mx-sm">
-      <q-breadcrumbs class="text-grey" active-color="purple">
-        <template v-slot:separator>
-          <q-icon size="1.2em" name="arrow_forward" color="purple" />
-        </template>
-
-<q-breadcrumbs-el label="Home" icon="home" />
-<q-breadcrumbs-el label="Components" icon="widgets" />
-<q-breadcrumbs-el label="Breadcrumbs" icon="navigation" />
-</q-breadcrumbs>
-</div> -->
-
-
-    <div class="q-mx-sm q-mt-xs row no-wrap scroll-x q-gutter-md hide-scrollbar">
-      <q-chip square color="primary shadow-2" class="text-white">All</q-chip>
-      <q-chip square class="shadow-0"
+    <div class="q-px-md q-mt-sm q-mb-sm">
+      <div class="shadow-0 row q-pt-xs q-mt-sm q-px-xs" style="flex: 2; min-width: 300px;">
+        <q-input rounded dense color="primary" outlined v-model="text" label="Search Lessons" style="width: 100%;">
+          <template v-slot:prepend>
+            <q-icon dense unelevated name="
+                  search" />
+          </template>
+        </q-input>
+      </div>
+    </div>
+    <div class="q-mx-sm q-mb-sm  row no-wrap scroll-x q-gutter-md hide-scrollbar">
+      <q-chip color="primary shadow-2 q-pt-xs" class="text-white">All</q-chip>
+      <q-chip class="shadow-0"
         v-for="n in ['Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Science & Technology', 'Agriculture', 'Home Economics', 'Physics', 'Chemistry', 'Life Skills', 'French', 'Chichewa', 'Wood Work', 'Metal Work']"
         :key="n">
         {{ n }}
       </q-chip>
     </div>
-
-
-
     <div class="row q-col-gutter-md grid-auto q-px-lg">
-      <LessonFirstCard v-for="lesson in lessons"  :key="lesson.id" :lesson="lesson"></LessonFirstCard>
-    </div>
-    <div class="text-h6 q-mx-md text-weight-bold">
-    </div>
-    <div class="row q-col-gutter-md grid-auto q-px-lg">
-      <LessonFirstCard v-for="lesson in lessons"  :key="lesson.id" :lesson="lesson"></LessonFirstCard>
+      <LessonFirstCard v-for="lesson in lessons" :key="lesson.id" :lesson="lesson"></LessonFirstCard>
     </div>
   </q-page>
 </template>
@@ -44,23 +33,24 @@ export default {
   },
   name: 'IndexPage',
 
-data() {
-  return {
-    lessons: []
-  } 
-},
-async mounted() {
-  this.loadData()
-},
-methods: {
-  async loadData(){
-    try {
-      const lessons = await lessonsService.getAll()
-      this.lessons = lessons
-    } catch (err) {
-      console.log(err)
+  data() {
+    return {
+      levels: 'All',
+      lessons: []
+    }
+  },
+  async mounted() {
+    this.loadData()
+  },
+  methods: {
+    async loadData() {
+      try {
+        const lessons = await lessonsService.getAll()
+        this.lessons = lessons
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
-}
 }
 </script>

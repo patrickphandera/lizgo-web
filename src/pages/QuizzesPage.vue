@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-px-md ">
+
     <div class="q-mt-xs q-mb-md row no-wrap scroll-x q-gutter-md hide-scrollbar">
       <q-chip dense square color="primary shadow-2" class="text-white">All</q-chip>
       <q-chip dense square class="shadow-0"
@@ -14,7 +15,7 @@
       <UnAttemptedQuizCard></UnAttemptedQuizCard>
       <CompletedQuizCard></CompletedQuizCard>
     </div>
-
+<CreateQuizModal></CreateQuizModal>
 
   </q-page>
 </template>
@@ -22,9 +23,10 @@
 import { defineComponent, ref } from 'vue'
 import UnAttemptedQuizCard from '../components/UnAttemptedQuizCard.vue'
 import CompletedQuizCard from '../components/CompletedQuizCard.vue'
+import CreateQuizModal from '../components/CreateQuizModal.vue'
 export default defineComponent({
   name: 'QuizzesPage',
-  components: { UnAttemptedQuizCard, CompletedQuizCard },
+  components: { UnAttemptedQuizCard, CompletedQuizCard, CreateQuizModal },
   setup() {
     const panel = ref('available')
 

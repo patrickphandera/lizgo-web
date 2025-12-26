@@ -12,7 +12,8 @@
         </router-link> <span class="q-mx-md text-center text-body1">{{ lesson.title }}</span>
       </div>
       <div>
-        <q-btn class="text-capitalize shadow-0" label="Add Credits" icon-right="add_shopping_cart"></q-btn>
+        <!-- <q-btn class="text-capitalize shadow-0" label="Add Credits" icon-right="add_shopping_cart"></q-btn> -->
+        <AddCredit></AddCredit>
       </div>
 
     </div>
@@ -87,7 +88,7 @@
             </template>
 
             <template #subtitle>
-              <div class="text-caption">
+              <div class="text-caption text-capitalize">
                 {{ section.description }}
               </div>
             </template>
@@ -103,13 +104,15 @@
 import LearningSection from '../components/LearningSection.vue'
 import { defineComponent } from 'vue'
 import LessonsService from '../services/lessons.service'
+import AddCredit from '../components/AddCredit.vue'
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { LearningSection },
+  components: { LearningSection,AddCredit },
 
   data() {
     return {
+      checkingOUt: false,
       text: '',
       completedSections: new Set(
         JSON.parse(localStorage.getItem(`lesson-${this.$route.params.id}-progress`) || '[]')

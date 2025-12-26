@@ -5,7 +5,7 @@ import axios from 'axios'
 class RestService {
   constructor(baseURL = process.env.VUE_APP_API_URL || 'http://localhost:5000') {
     this.baseURL = baseURL
-    this.timeout = 5000
+    this.timeout = 30000
 
     this.axiosInstance = axios.create({
       baseURL,
@@ -45,7 +45,7 @@ class RestService {
     return (
       localStorage.getItem('access_token') ||
       sessionStorage.getItem('access_token') ||
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NGJkYWUyMWVjYmQ2NjA4YTI2NDAxZCIsImlhdCI6MTc2NjU3ODkzOCwiZXhwIjoxNzY5MTcwOTM4fQ.K9Dicj-pGaEx509dQLujQIImkAU-Q1Oq-k1ma1FmcnI'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTRkZWQwOWI1MTM2OWFiNDU4NWQ1NTgiLCJpYXQiOjE3NjY3MTQ4OTEsImV4cCI6MTc2NjgwMTI5MX0.zd5KCs57QG_f1JUr972o0-2Cr4CXZMFjSlN1ihc3VTo'
     )
   }
 
