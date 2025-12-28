@@ -6,8 +6,8 @@ class SocketService {
   connect(token) {
     if (this.socket) return this.socket
 
-    this.socket = io(process.env.API_URL, {
-      auth: { token }
+    this.socket = io(process.env.VITE_API_URL, {
+      auth: { token },
     })
 
     return this.socket
@@ -25,10 +25,17 @@ class SocketService {
   }
 
   sendMessage(conversationId, content) {
+    if (!this.socket) {
+      throw new Error('Socket not connected')
+    }
     this.socket.emit('sendMessage', {
       conversationId,
-      content
+      content,
     })
+    if (!this.socket) {
+      console.error('Socket not connected')
+      return
+    }
   }
 
   onNewMessage(callback) {

@@ -15,13 +15,11 @@
         <div>
 
           <div>
-
-
             <q-btn color="grey-1" round icon="notifications" class="q-mx-sm text-black" unelevated>
               <q-badge color="red" floating>4</q-badge>
             </q-btn>
 
-            <q-btn flat>
+            <q-btn flat round>
               <q-avatar round color="white" class="text-sub-title shadow-1 text-primary" clickable>
                 p
               </q-avatar>
@@ -52,11 +50,6 @@
 
     </q-header>
     <q-drawer :class="$q.dark.isActive ? 'bg-grey-9 q-mb-md' : 'bg-grey-3 q-mb-md'" bordered :width="140" behavior="mobile" v-model="leftDrawerOpen" show-if-above>
-      <!-- <q-list class="row justify-center q-mt-xs q-mb-xs">
-        <q-avatar class="shadow-3">
-          <img src="/Zoe Logo-1.jpg" />
-        </q-avatar>
-      </q-list> -->
 
       <q-list class="q-mt-lg">
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />

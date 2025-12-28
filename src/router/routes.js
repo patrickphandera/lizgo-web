@@ -22,6 +22,14 @@ const routes = [
     children: [{ path: '', component: () => import('pages/HomePage.vue') }],
   },
 
+    {
+    path: '/channels',
+    component: () => import('layouts/ChannelLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/ChannelsPage.vue') },
+      { path: ':id', component: () => import('pages/LessonPage.vue') },
+    ],
+  },
   {
     path: '/lessons',
     component: () => import('layouts/LessonLayout.vue'),

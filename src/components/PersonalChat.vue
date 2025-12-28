@@ -64,6 +64,7 @@ const loadMessages = async () => {
   const res = await MessagesService.loadMessages(props.conversationId, {
     limit: 50
   })
+  console.log(res)
   messages.value = res.messages || []
 }
 

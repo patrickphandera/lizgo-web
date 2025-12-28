@@ -189,6 +189,7 @@
 </template>
 
 <script setup>
+  import { Notify } from 'quasar'
 import { ref, computed, onMounted, watch } from 'vue'
 import CurriculumsService from '../services/curriculums.service'
 import LevelsService from '../services/levels.service'
@@ -413,10 +414,16 @@ async function submitQuiz() {
 
     await QuizzesService.create(payload)
     modal.value = false
-    // TODO: Show success notification
+    Notify.create({
+      type: 'positive',
+      message: 'Quiz created successfully!'
+    })
   } catch (error) {
     console.error('Failed to create quiz:', error)
-    // TODO: Show error notification
+    Notify.create({
+      type: 'negative',
+      message: 'Failed to create quiz. Please try again.'
+    })
   } finally {
     isSubmitting.value = false
   }

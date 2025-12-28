@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+
       <!-- Trigger button (optional, can remove) -->
       <q-btn icon-right="mdi-chevron-right" unelevated color="primary" @click="open = true"
         class="text-capitalize text-caption shadow-0" label="Start Quiz" />
@@ -8,10 +9,14 @@
     <!-- QUIZ MODAL -->
     <q-dialog v-model="open" persistent class="full-height full-width">
       <q-card style="width: 1200px; max-width: 100vw">
-
+{{ quiz }}
         <!-- Header -->
         <q-card-section class="row items-center justify-between">
-          <div class="text-h6">{{ quiz.title }}</div>
+          <div class="text-h6">{{ quiz.title }}
+
+          </div>
+
+
           <q-btn flat icon="close" @click="open = false" />
         </q-card-section>
 
@@ -27,7 +32,7 @@
             </div>
 
             <q-list bordered separator>
-              <q-item v-for="(rule, i) in quiz.rules" :key="i">
+              <q-item v-for="(rule, i) in quiz.options" :key="i">
                 <q-item-section avatar>
                   <q-icon name="check_circle" color="primary" />
                 </q-item-section>
@@ -117,96 +122,121 @@
 
   </div>
 </template>
+<script>
 
-<script setup>
-import { ref, computed } from 'vue'
+export default {
+  name: 'QuizModal',
+props:{quiz: Object},
+  data () {
+    return {
+      /* MODAL STATE */
+      open: false,
+      step: 1,
+      acceptedRules: false,
 
-/* MODAL STATE */
-const open = ref(false)
-const step = ref(1)
-const acceptedRules = ref(false)
+      /* QUIZ TIMER */
+      remainingTime: 30,
 
-/* QUIZ TIMER */
-const remainingTime = ref(30)
+      /* QUESTIONS */
+      currentIndex: 0,
 
-/* QUESTIONS */
-const currentIndex = ref(0)
+      // quiz: {
+        // title: 'Algebra Practice Quiz',
+        // rules: [
+        //   'You have 30 minutes to complete the quiz',
+        //   'No pausing once the quiz starts',
+        //   'Each question has one correct answer',
+        //   'Submit before time runs out'
+        // ],
+        // questions: [
+        //   {
+        //     question: 'What is 5 + 3?',
+        //     options: [
+        //       { label: '6', value: 0 },
+        //       { label: '7', value: 1 },
+        //       { label: '8', value: 2 },
+        //       { label: '9', value: 3 }
+        //     ],
+        //     answer: null
+        //   },
+        //   {
+        //     question: 'What is 10 ÷ 2?',
+        //     options: [
+        //       { label: '2', value: 0 },
+        //       { label: '5', value: 1 },
+        //       { label: '10', value: 2 },
+        //       { label: '20', value: 3 }
+        //     ],
+        //     answer: null
+        //   }
+        // ]
+      // }
+    }
+  },
 
-const quiz = ref({
-  title: 'Algebra Practice Quiz',
-  rules: [
-    'You have 30 minutes to complete the quiz',
-    'No pausing once the quiz starts',
-    'Each question has one correct answer',
-    'Submit before time runs out'
-  ],
-  questions: [
-    {
-      question: 'What is 5 + 3?',
-      options: [
-        { label: '6', value: 0 },
-        { label: '7', value: 1 },
-        { label: '8', value: 2 },
-        { label: '9', value: 3 }
-      ],
-      answer: null
+  computed: {
+    currentQuestion () {
+      return this.quiz.questions[this.currentIndex]
     },
-    {
-      question: 'What is 10 ÷ 2?',
-      options: [
-        { label: '2', value: 0 },
-        { label: '5', value: 1 },
-        { label: '10', value: 2 },
-        { label: '20', value: 3 }
-      ],
-      answer: null
+
+    actionLabel () {
+      if (this.step === 1) return 'Start Quiz'
+
+      if (this.step === 2) {
+        return this.currentIndex === this.quiz.questions.length - 1
+          ? 'Submit Quiz'
+          : 'Next Question'
+      }
+
+      return 'Close'
+    },
+
+    score () {
+      return this.quiz.questions.filter(
+        q => q.answer === q.correct
+      ).length
+    },
+
+    percentage () {
+      return Math.round(
+        (this.score / this.quiz.questions.length) * 100
+      )
     }
-  ]
-})
+  },
 
-const currentQuestion = computed(() => quiz.value.questions[currentIndex.value])
+  methods: {
+    nextStep () {
+      if (this.step === 1) {
+        this.step = 2
+        return
+      }
 
-const actionLabel = computed(() => {
-  if (step.value === 1) return 'Start Quiz'
-  if (step.value === 2)
-    return currentIndex.value === quiz.value.questions.length - 1
-      ? 'Submit Quiz'
-      : 'Next Question'
-  return 'Close'
-})
+      if (this.step === 2) {
+        if (this.currentIndex < this.quiz.questions.length - 1) {
+          this.currentIndex++
+        } else {
+          this.submitQuiz()
+        }
+        return
+      }
 
+      if (this.step === 3) {
+        this.open = false
+      }
+    },
 
-function nextStep() {
-  if (step.value === 1) {
-    step.value = 2
-    return
-  }
+    prevStep () {
+      if (this.step === 2 && this.currentIndex > 0) {
+        this.currentIndex--
+      } else {
+        this.step = 1
+      }
+    },
 
-  if (step.value === 2) {
-    if (currentIndex.value < quiz.value.questions.length - 1) {
-      currentIndex.value++
-    } else {
-      submitQuiz()
+    submitQuiz () {
+      console.log('QUIZ SUBMITTED:', this.quiz.questions)
+      this.step = 3
     }
-    return
   }
-
-  if (step.value === 3) {
-    open.value = false
-  }
-}
-
-
-function prevStep() {
-  if (step.value === 2 && currentIndex.value > 0) {
-    currentIndex.value--
-  } else {
-    step.value = 1
-  }
-}
-
-function submitQuiz() {
-  console.log('QUIZ SUBMITTED:', quiz.value.questions)
-  step.value = 3
 }
 </script>
