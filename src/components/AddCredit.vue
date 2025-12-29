@@ -2,10 +2,10 @@
   <div class="">
     <q-btn
       icon-right="add_shopping_cart"
-      class="text-black"
+      class="text-white"
       no-caps
       label="Subscribe"
-      color="white"
+      color="primary"
       @click="fixed = true"
     />
     <q-dialog persistent v-model="fixed">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="text-caption text-weight-medium text-primary">
                   <q-chip square class="text-caption">
-                    {{ subscription.currency }} ${{ subscription.price }}
+                    {{ subscription.currency }}{{ subscription.price }}
                   </q-chip>
 
                   <q-chip square class="text-caption">
@@ -112,6 +112,7 @@ export default {
     },
     async checkOut() {
       try {
+        console.log(window.location.href)
         this.initalisingPayment = true
         const result = await UserSubscriptionsService.createUserSubscription({
           planId: this.selectedCard,
@@ -120,7 +121,7 @@ export default {
         console.log(result)
         Notify.create({
           type: 'positive',
-          message: `You have selected ${this.subscriptionPlans.filter((plan) => plan.id === this.selectedCard)}.We are redirecting to payment...`,
+          message: `You are being redirected to payment...`,
         })
         window.location.href = result.paymentUrl
         this.initalisingPayment = false

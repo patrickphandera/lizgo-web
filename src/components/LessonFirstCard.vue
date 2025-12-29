@@ -1,23 +1,23 @@
 <template>
   <div class="col-12 col-sm-6 col-md-4">
     <q-card  clickable class="q-my-sm shadow-1">
-      <router-link :to="`/lessons/${lesson?.id}`" style="text-decoration: none; color: inherit;">
+      <router-link :to="`/students/lessons/${lesson?.id}`" style="text-decoration: none; color: inherit;">
         <q-img :src="lesson?.thumbnail" height="140px">
           <div class="absolute-full text-subtitle2 flex flex-center">
-          </div>  
+          </div>
         </q-img>
       </router-link>
 
       <div>
-        <q-card-section>
+
           <div class="row items-center flex">
 
-            <div class="text-body1 text-weight-medium ellipsis q-mr-sm">
+            <div class="text-body1 text-weight-medium ellipsis q-px-sm">
               {{
                 lesson?.title }}
             </div>
           </div>
-          <div class="text-caption flex">
+          <div class="text-caption flex q-px-xs">
             <q-chip square class="text-caption " dense>{{
               lesson?.curriculumId?.title }}</q-chip>
             <q-chip square class="text-caption" dense>{{
@@ -31,7 +31,7 @@
             <q-chip square class="text-caption " dense>
               {{ lesson?.timeAgo }}</q-chip>
           </div>
-          <div class="flex q-my-xs row ">
+          <div class="flex q-my-xs row q-pa-sm">
             <div class="row q-gutter-sm">
               <q-avatar size="40px">
                 <img src="https://cdn.quasar.dev/img/boy-avatar.png">
@@ -44,7 +44,6 @@
             <q-space></q-space>
             <q-btn flat round dense icon="more_vert" />
           </div>
-        </q-card-section>
       </div>
     </q-card>
   </div>

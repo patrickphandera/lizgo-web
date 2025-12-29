@@ -26,7 +26,7 @@
       <q-separator />
 
       <q-card-section>
-        <q-form @submit="onSubmit" ref="formRef" class="q-gutter-md">
+        <q-form @submit="onSubmit" ref="formRef" class="q-gutter-sm">
           <q-input
             v-model="formData.title"
             label="Group Title *"
@@ -67,12 +67,14 @@
           label="Cancel"
           color="grey"
           flat
+          class="text-capitalize"
           @click="onCancel"
           :disable="loading"
         />
         <q-btn
           label="Create Group"
           color="primary"
+          class="text-capitalize"
           @click="onSubmit"
           :loading="loading"
           :disable="loading"

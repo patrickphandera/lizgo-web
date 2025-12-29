@@ -4,21 +4,21 @@
       <!-- Body -->
       <q-card-section>
         <div class="text-body1 text-weight-medium">
-          {{ quiz.title }}
+          {{ conversation?.title }}
         </div>
 
         <div class="text-caption q-mt-xs">
-          {{ quiz.description }}
+          {{ conversation?.description }}
         </div>
         <div class="q-mt-md">
           <q-chip square text-color="black" flat class="text-caption"> Medium </q-chip>
           <q-chip text-color="black" class="text-caption">
-            {{ quiz.questions.length }} Member
+            {{ conversation?.members?.length }} Member
           </q-chip>
           <q-chip square text-color="black" class="text-caption"> 2hr Ago </q-chip>
-          <q-chip square text-color="black" class="text-caption">
-            {{ quiz.questions.length }} Questions
-          </q-chip>
+          <!-- <q-chip square text-color="black" class="text-caption">
+            {{ conversation?.members?.length }} Questions
+          </q-chip> -->
         </div>
       </q-card-section>
 
@@ -36,23 +36,23 @@
             <q-space />
           </div>
         </div>
-        <q-btn no-caps color="primary" class="text-caption">
-          View <q-icon size="18px" name="mdi-arrow-right"></q-icon
-        ></q-btn>
+        <GroupChatModal></GroupChatModal>
       </div>
     </q-card>
   </div>
 </template>
 
 <script>
+  import GroupChatModal from './GroupChatModal.vue'
 import { defineComponent } from 'vue'
 import { ref } from 'vue'
 export default defineComponent({
-  name: 'QuizCard',
-  props: { quiz: Object },
+  name: 'ChannelCard',
+  props: { conversation: Object },
+  components: { GroupChatModal },
   setup() {
     return {
-      showQuiz: ref(false),
+      showConversation: ref(false),
     }
   },
 })

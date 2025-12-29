@@ -7,27 +7,31 @@
           <div class="text-h6 flex items-center">Channels</div>
           <div>
             <div class="q-mb-sm row q-col-gutter-md items-center">
-              <ChannelCreateDialog v-model="showChannelDialog" @success="handleChannelCreated" />
-              <q-input dense outlined label="Search Channels" prepend="mdi-magnify">
+               <q-input dense outlined label="Search Channels" prepend="mdi-magnify">
                 <template v-slot:prepend>
                   <q-icon name="mdi-magnify"></q-icon>
                 </template>
               </q-input>
+              <ChannelCreateDialog v-model="showChannelDialog" @success="handleChannelCreated" />
             </div>
           </div>
         </div>
         <q-page class="q-px-md">
-          <q-list bordered class="rounded-borders">
+          <q-list bordered>
+            <div  v-for="(channel,index) in channels"
+              v-bind:key="channel.id">
+              <q-separator v-if="index !== 0"></q-separator>
             <q-expansion-item
               v-ripple="false"
-              v-for="channel in channels"
-              v-bind:key="channel.id"
+
               expand-icon-toggle
+
               expand-separator
               icon="list"
               :label="channel.title"
               :caption="channel.timeAgo"
             >
+
               <q-card>
                 <q-card-section class="row justify-between">
                   {{ channel.description }}
@@ -48,20 +52,21 @@
                 <q-card-section>
                   <div class="row q-col-gutter-md grid-auto">
                     <ChannelCard
-                      v-for="quiz in quizzes"
-                      v-bind:key="quiz.id"
-                      :quiz="quiz"
+                    v-bind:key="conversation.id"
+                    v-for="conversation in  filterByChannelId(conversations, channel.id)"
+                      :conversation="conversation"
                     ></ChannelCard>
                   </div>
                 </q-card-section>
               </q-card>
             </q-expansion-item>
-          </q-list>
+            </div>
 
-          <!-- <CreateQuizModal></CreateQuizModal> -->
+          </q-list>
         </q-page>
       </q-list>
     </q-list>
+
   </div>
 </template>
 <script>
@@ -71,14 +76,13 @@ import GroupConversationCreateDialog from '../components/GroupConversationCreate
 import { defineComponent } from 'vue'
 import ChannelCard from '../components/ChannelCard.vue'
 // import CreateQuizModal from '../components/CreateQuizModal.vue'
-import quizzesService from 'src/services/quizzes.service'
-import channelsService from 'src/services/channels.service'
+import channelsService from '../services/channels.service'
+import conversationsService from '../services/conversations.service'
 export default defineComponent({
   name: 'ChannelsPage',
   components: {
     GroupConversationCreateDialog,
     ChannelCard,
-    //  CreateQuizModal
     ChannelCreateDialog,
   },
   data() {
@@ -87,14 +91,19 @@ export default defineComponent({
 
     const unattemptedCount = 6
     const completedCount = 3
-    const quizzes = ref([])
+    const conversations = ref([])
     const channels = ref([])
+    const filterByChannelId = (list, channelId) => {
+      console.log('Filtering conversations for channelId:', channelId, list)
+      return list.filter((item) => item.channelId === channelId)
+    }
     return {
+      filterByChannelId,
       showChannelDialog,
       panel,
       unattemptedCount,
       completedCount,
-      quizzes,
+      conversations,
       channels,
     }
   },
@@ -102,16 +111,17 @@ export default defineComponent({
     await this.loadData()
   },
   methods: {
+
     async handleChannelCreated() {},
     async loadData() {
-     const channels = await channelsService.list()
+      const channels = await channelsService.list()
 
       channels.map((channel) => {
-        channel.toggle=false
+        channel.toggle = false
         return channel
       })
       this.channels = channels
-      this.quizzes = await quizzesService.list()
+      this.conversations = await conversationsService.list()
     },
   },
 })

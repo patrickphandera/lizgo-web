@@ -23,27 +23,13 @@ const routes = [
   },
 
     {
-    path: '/channels',
+    path: '/students',
     component: () => import('layouts/ChannelLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/ChannelsPage.vue') },
-      { path: ':id', component: () => import('pages/LessonPage.vue') },
-    ],
-  },
-  {
-    path: '/lessons',
-    component: () => import('layouts/LessonLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/LessonsPage.vue') },
-      { path: ':id', component: () => import('pages/LessonPage.vue') },
-    ],
-  },
-  {
-    path: '/discussions',
-    component: () => import('layouts/DiscussionLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/DiscussionsPage.vue') },
-      // { path: ':id', component: () => import('pages/DiscussionPage.vue') },
+      { path: 'channels', component: () => import('pages/ChannelsPage.vue') },
+      { path: 'channels/:id', component: () => import('pages/LessonPage.vue') },
+      { path: 'lessons', component: () => import('pages/LessonsPage.vue') },
+      { path: 'lessons/:id', component: () => import('pages/LessonPage.vue') },
     ],
   },
   {
