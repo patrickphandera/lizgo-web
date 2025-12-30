@@ -6,7 +6,7 @@
         <router-link :to="`/students/lessons`" style="text-decoration: none; color: inherit">
 
             <q-btn
-            outline
+
             size="sm"
               class="text-capitalize shadow-0 row"
               @click="$router.push({ path: '/lessons' })"
@@ -21,7 +21,7 @@
         <AddCredit></AddCredit>
       </div>
     </div>
-    <div class="row q-my-md">
+    <div class="row q-my-sm">
       <div class="col-10 q-pr-md">
         <q-card v-if="!isNextBtnActive" class="my-card video row justify-center">
           <img src="/premium.jpeg" class="video"
@@ -45,9 +45,9 @@
             </div>
           </q-card>
         </div>
-        <div class="row justify-between q-mt-sm">
+        <div class="row justify-between q-mt-sm ">
           <div>
-            <q-btn outline class="text-capitalize"> <q-icon name="mdi-message-badge-outline" size="24px"></q-icon>  24 Comments</q-btn>
+            <LessonCommentModal :conversationId="lesson.conversationId"></LessonCommentModal>
           </div>
           <div>
             <q-btn
@@ -65,40 +65,7 @@
             <q-btn v-if="!isNextBtnActive" icon="mdi-skip-next" disable />
           </div>
         </div>
-        <q-card bordered flat class="q-mt-md">
-          <q-card-section class="text-h6">
-            <div>Comments</div>
-            <q-item>
-              <q-item-section avatar>
-                <q-avatar>
-                  <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
-                </q-avatar>
-              </q-item-section>
 
-              <q-item-section>
-                <q-input outlined v-model="text" class="q-mt-sm" label="New message" dense />
-              </q-item-section>
-            </q-item>
-            <q-item v-for="i in [1, 2]" v-bind:key="i">
-              <q-item-section avatar>
-                <q-avatar>
-                  <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
-                </q-avatar>
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label caption>@PatrickPhandera</q-item-label>
-                <q-item-label class="text-caption">
-                  Maize is a crucial crop in Malawi, serving as both a staple food and a key driver
-                  of the national economy. Its production supports the livelihoods of millions of
-                  smallholder farmers and contributes significantly to food security. Understanding
-                  the importance of maize helps in promoting sustainable agricultural practices and
-                  shaping policies that strengthen Malawi’s agricultural sector.</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-          </q-card-section>
-        </q-card>
       </div>
 
       <q-card class="col-2 q-px-md shadow-1">
@@ -132,10 +99,10 @@ import LearningSection from '../components/LearningSection.vue'
 import { defineComponent } from 'vue'
 import LessonsService from '../services/lessons.service'
 import AddCredit from '../components/AddCredit.vue'
-
+import LessonCommentModal from '../components/LessonCommentModal.vue'
 export default defineComponent({
   name: 'IndexPage',
-  components: { LearningSection, AddCredit },
+  components: { LearningSection, AddCredit,LessonCommentModal },
 
   data() {
     return {

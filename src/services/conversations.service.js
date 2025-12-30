@@ -13,6 +13,10 @@ class ConversationsService extends BaseDbService {
     return this.getById(id)
   }
 
+    async post(id) {
+    return this.post(id)
+  }
+
   // Get conversation by ID with full details
   async getConversationDetails(id) {
     try {
@@ -32,6 +36,9 @@ class ConversationsService extends BaseDbService {
     return this.patch(id, data)
   }
 
+   async joinConversation(id) {
+    return this.post(`${id}/join`)
+  }
   async deleteConversation(id) {
     return this.delete(id)
   }

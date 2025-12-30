@@ -24,15 +24,17 @@
     <div class="row q-col-gutter-md grid-auto q-px-lg">
       <LessonFirstCard v-for="lesson in lessons" :key="lesson.id" :lesson="lesson"></LessonFirstCard>
     </div>
+    <AddLessonPage></AddLessonPage>
   </q-page>
 </template>
 
 <script>
 import LessonFirstCard from 'src/components/LessonFirstCard.vue'
 import lessonsService from 'src/services/lessons.service'
+import AddLessonPage from '../components/AddLessonPage.vue'
 export default {
   components: {
-    LessonFirstCard,
+    LessonFirstCard,AddLessonPage
   },
   name: 'IndexPage',
 

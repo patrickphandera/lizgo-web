@@ -1,4 +1,4 @@
-// src/services/socket.service.js
+// src/services/socketService.js
 import { io } from 'socket.io-client'
 
 class SocketService {
@@ -11,41 +11,18 @@ class SocketService {
       return this.socket
     }
 
+    // Disconnect existing socket if any
     if (this.socket) {
       this.socket.disconnect()
     }
 
-    // DEBUG: Log all environment variables
-    console.log('🔍 All env vars:', import.meta.env)
-    console.log('🔍 VITE_API_URL:', import.meta.env.VITE_API_URL)
-
-    const apiUrl = import.meta.env.VITE_API_URL
-
-    if (!apiUrl || apiUrl === 'undefined') {
-      console.error('❌ VITE_API_URL is not defined!')
-      console.error('Current value:', apiUrl)
-      // Fallback for development
-      const fallbackUrl = 'http://localhost:5000'
-      console.warn('⚠️ Using fallback URL:', fallbackUrl)
-
-      this.socket = io(`${fallbackUrl}/messaging`, {
-        auth: { token },
-        transports: ['websocket', 'polling'],
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionAttempts: 5,
-      })
-    } else {
-      console.log('✅ Connecting to:', `${apiUrl}/messaging`)
-
-      this.socket = io(`${apiUrl}/messaging`, {
-        auth: { token },
-        transports: ['websocket', 'polling'],
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionAttempts: 5,
-      })
-    }
+    this.socket = io(`${process.env.VITE_API_URL}/messaging`, {
+      auth: { token },
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5,
+    })
 
     this.setupEventHandlers()
     return this.socket
@@ -53,19 +30,19 @@ class SocketService {
 
   setupEventHandlers() {
     this.socket.on('connect', () => {
-      console.log('✅ Socket connected:', this.socket.id)
+      console.log('Socket connected:', this.socket.id)
     })
 
     this.socket.on('disconnect', (reason) => {
-      console.log('❌ Socket disconnected:', reason)
+      console.log('Socket disconnected:', reason)
     })
 
     this.socket.on('connect_error', (error) => {
-      console.log('🔴 Socket connection error:', error)
+      console.error('Socket connection error:', error)
     })
 
     this.socket.on('error', (error) => {
-      console.error('🔴 Socket error:', error)
+      console.error('Socket error:', error)
     })
   }
 
@@ -132,6 +109,21 @@ class SocketService {
     )
   }
 
+  markAsRead(conversationId, messageId, callback) {
+    if (!this.socket) {
+      console.error('Socket not connected')
+      return
+    }
+
+    this.socket.emit(
+      'markAsRead',
+      { conversationId, messageId },
+      (response) => {
+        callback?.(response)
+      }
+    )
+  }
+
   onNewMessage(callback) {
     if (!this.socket) {
       console.error('Socket not connected')
@@ -150,6 +142,7 @@ class SocketService {
     }
   }
 
+  // Clean up all listeners
   removeAllListeners() {
     if (this.socket) {
       this.socket.removeAllListeners()
