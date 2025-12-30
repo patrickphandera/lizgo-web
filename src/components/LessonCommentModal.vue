@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <q-btn @click="joinConversation()" outline class="text-capitalize">
+    <q-btn @click="openModal()" outline class="text-capitalize">
       <q-icon name="mdi-message-badge-outline" size="24px"></q-icon>
       {{ messages.length }} Comments
     </q-btn>
@@ -17,22 +17,33 @@
 
         <!-- Scrollable Content Area -->
         <q-card-section class="col scroll" ref="messageContainer">
-          <q-item v-for="message in messages" :key="message._id">
-            <q-item-section avatar>
-              <q-avatar>
-                <img :src="message.sender?.avatar || 'https://cdn.quasar.dev/img/avatar2.jpg'" />
-              </q-avatar>
-            </q-item-section>
+          <q-item
+            v-for="message in messages"
+            :key="message._id"
+            class="bg-grey-2 q-mt-sm row justify-between"
+            style="border-radius: 10px"
+          >
+            <div class="row">
+              <q-item-section avatar>
+                <q-avatar size="40px">
+                  <img :src="message.sender?.avatar || 'https://cdn.quasar.dev/img/avatar2.jpg'" />
+                </q-avatar>
+              </q-item-section>
 
-            <q-item-section>
-              <q-item-label caption>@{{ message.sender?.username || 'Unknown' }}</q-item-label>
-              <q-item-label class="text-caption">
-                {{ message.content }}
-              </q-item-label>
-              <q-item-label caption class="text-grey">
+              <q-item-section>
+                <q-item-label class="text-caption text-grey-9"
+                  >@{{ message.sender || 'Unknown' }}</q-item-label
+                >
+                <q-item-label class="text-caption">
+                  {{ message.content }}
+                </q-item-label>
+              </q-item-section>
+            </div>
+            <div>
+              <q-item-label caption class="text-caption text-grey-9">
                 {{ formatDate(message.createdAt) }}
               </q-item-label>
-            </q-item-section>
+            </div>
           </q-item>
 
           <!-- Loading indicator -->
@@ -82,18 +93,18 @@
 </template>
 
 <script setup>
-  import {Notify} from 'quasar'
+// import {Notify} from 'quasar'
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import socketService from '../services/socket.service'
-import conversationsService from 'src/services/conversations.service'
+// import conversationsService from 'src/services/conversations.service'
 import { useAuthStore } from '../stores/auth' // Adjust to your auth store
 import { date } from 'quasar'
 
 const props = defineProps({
   conversationId: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const authStore = useAuthStore()
@@ -128,9 +139,9 @@ const loadMessages = async () => {
       `${import.meta.env.VITE_API_URL}/conversations/${props.conversationId}/messages`,
       {
         headers: {
-          Authorization: `Bearer ${authStore.token}`
-        }
-      }
+          Authorization: `Bearer ${authStore.token}`,
+        },
+      },
     )
     const data = await response.json()
     messages.value = data.messages || []
@@ -147,35 +158,31 @@ const sendMessage = () => {
   if (!newMessage.value.trim() || sending.value) return
 
   sending.value = true
-  socketService.sendMessage(
-    props.conversationId,
-    newMessage.value.trim(),
-    (response) => {
-      sending.value = false
-      if (response?.success) {
-        newMessage.value = ''
-        // Message will be added via socket event
-      } else {
-        console.error('Failed to send message:', response?.error)
-        // Show error notification
-      }
+  socketService.sendMessage(props.conversationId, newMessage.value.trim(), (response) => {
+    sending.value = false
+    if (response?.success) {
+      newMessage.value = ''
+      // Message will be added via socket event
+    } else {
+      console.error('Failed to send message:', response?.error)
+      // Show error notification
     }
-  )
+  })
 }
 
-const joinConversation = () => {
-  try{
-  conversationsService.joinConversation(props.conversationId)
-  openModal()
-  }catch(err){
-    Notify.create(err)
-  }
-}
+// const joinConversation = () => {
+//   try{
+//   conversationsService.joinConversation(props.conversationId)
+//   openModal()
+//   }catch(err){
+//     Notify.create(err)
+//   }
+// }
 // Handle incoming messages
 const handleNewMessage = (data) => {
   if (data.conversationId === props.conversationId) {
     // Check if message already exists (to avoid duplicates)
-    const exists = messages.value.find(m => m._id === data.message._id)
+    const exists = messages.value.find((m) => m._id === data.message._id)
     if (!exists) {
       messages.value.push(data.message)
       scrollToBottom()
@@ -194,7 +201,6 @@ const closeModal = () => {
   fixed.value = false
   socketService.leaveConversation(props.conversationId)
 }
-
 
 onMounted(() => {
   // Connect socket
