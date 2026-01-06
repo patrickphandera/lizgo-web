@@ -4,9 +4,7 @@
     <div class="text-h6 flex justify-between">
       <div class="flex">
         <router-link :to="`/students/lessons`" style="text-decoration: none; color: inherit">
-
             <q-btn
-
             size="sm"
               class="text-capitalize shadow-0 row"
               @click="$router.push({ path: '/lessons' })"

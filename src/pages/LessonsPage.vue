@@ -1,11 +1,24 @@
 <template>
   <q-page class="">
-    <div class="text-h6 q-px-lg q-mt-sm">
-      Lessons
+    <div class="row justify-between q-px-lg q-mt-sm items-center">
+    <div class="column">
+      <div class="text-weight-bold text-h6">
+        Welcome to Lessons
+      </div>
+        <div>
+        We have a variety of lessons terrored to your currculum and levels of study.
+      </div>
+    </div>
+    <div class="row q-gutter-md">
+ <q-select dense outlined v-model="model" :options="options" label="Levels" style="width:100px"/>
+       <AddCredit></AddCredit>
+    </div>
     </div>
     <div class="q-px-md q-mt-sm q-mb-sm">
       <div class="shadow-0 row q-pt-xs q-mt-sm q-px-xs" style="flex: 2; min-width: 300px;">
-        <q-input  dense color="primary" outlined v-model="text" label="Search Lessons" style="width: 100%;">
+        <q-input   dense color="primary" outlined v-model="text" label="Search
+          Lessons
+        " style="width: 100%;">
           <template v-slot:prepend>
             <q-icon dense unelevated name="
                   search" />
@@ -29,17 +42,23 @@
 </template>
 
 <script>
+  import AddCredit from '../components/AddCredit.vue'
 import LessonFirstCard from 'src/components/LessonFirstCard.vue'
 import lessonsService from 'src/services/lessons.service'
+import { ref } from 'vue'
 import AddLessonPage from '../components/AddLessonPage.vue'
 export default {
   components: {
-    LessonFirstCard,AddLessonPage
+    LessonFirstCard,AddLessonPage,AddCredit
   },
   name: 'IndexPage',
 
   data() {
     return {
+       model: ref('All'),
+      options: [
+        'All', 'Form 4', 'Form 3', 'Form 2', 'Form 1'
+      ],
       levels: 'All',
       lessons: []
     }

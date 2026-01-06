@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <q-btn @click="openModal()" outline class="text-capitalize">
+
+    <q-btn @click="openModal()"  class="text-capitalize">
       <q-icon name="mdi-message-badge-outline" size="24px"></q-icon>
       {{ messages.length }} Comments
     </q-btn>
@@ -24,6 +25,7 @@
             style="border-radius: 10px"
           >
             <div class="row">
+{{message}}
               <q-item-section avatar>
                 <q-avatar size="40px">
                   <img :src="message.sender?.avatar || 'https://cdn.quasar.dev/img/avatar2.jpg'" />
@@ -32,7 +34,7 @@
 
               <q-item-section>
                 <q-item-label class="text-caption text-grey-9"
-                  >@{{ message.sender || 'Unknown' }}</q-item-label
+                  >@{{ message.firstName +' '+ message.lastName || 'Unknown' }}</q-item-label
                 >
                 <q-item-label class="text-caption">
                   {{ message.content }}
