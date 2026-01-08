@@ -30,6 +30,7 @@ const routes = [
       { path: 'channels/:id', component: () => import('pages/LessonPage.vue') },
       { path: 'lessons', component: () => import('pages/LessonsPage.vue') },
       { path: 'lessons/:id', component: () => import('pages/LessonPage.vue') },
+       { path: 'subjects', component: () => import('pages/SubjectsPage.vue') },
     ],
   },
   {

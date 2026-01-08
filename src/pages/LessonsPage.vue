@@ -16,7 +16,7 @@
     </div>
     <div class="q-px-md q-mt-sm q-mb-sm">
       <div class="shadow-0 row q-pt-xs q-mt-sm q-px-xs" style="flex: 2; min-width: 300px;">
-        <q-input   dense color="primary" outlined v-model="text" label="Search
+        <q-input class="thick-border"  dense color="primary" outlined v-model="text" label="Search
           Lessons
         " style="width: 100%;">
           <template v-slot:prepend>
@@ -78,3 +78,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .thick-border .q-field__control::before,
+.thick-border .q-field__control::after {
+  border-width: 2px;
+}
+
+</style>

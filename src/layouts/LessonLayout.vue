@@ -90,6 +90,11 @@ const linksList = [
     title: 'Forums',
     icon: 'mdi-account-group',
     link: '/discussions',
+  },
+   {
+    title: 'Subjects',
+    icon: 'mdi-list',
+    link: '/subjects',
   }
 ]
 

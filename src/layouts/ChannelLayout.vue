@@ -163,6 +163,11 @@ const linksList = [
     icon: 'mdi-crowd',
     link: '/students/channels',
   },
+   {
+    title: 'Subjects',
+    icon: 'list',
+    link: '/students/subjects',
+  },
     {
     title: 'Settings',
     icon: 'mdi-cog',
