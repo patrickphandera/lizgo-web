@@ -188,6 +188,11 @@ const linksList = [
     link: '/students/topics',
   },
   {
+    title: 'Users',
+    icon: 'mdi-account-group',
+    link: '/students/users',
+  },
+  {
     title: 'Settings',
     icon: 'mdi-cog',
     link: '/students/settings',

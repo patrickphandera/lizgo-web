@@ -34,6 +34,8 @@ const routes = [
       { path: 'curriculums', component: () => import('pages/CurriculumsPage.vue') },
       { path: 'levels', component: () => import('pages/LevelsPage.vue') },
       { path: 'topics', component: () => import('pages/TopicsPage.vue') },
+      { path: 'users', component: () => import('pages/UsersPage.vue') },
+      { path: 'users/:id', component: () => import('pages/UserPage.vue') },
     ],
   },
   {

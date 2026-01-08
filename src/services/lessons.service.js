@@ -89,13 +89,9 @@ class LessonsService extends BaseDbService {
   }
 
   // Get lessons by author
-  async getLessonsByAuthor(authorId, params = {}) {
-    try {
-      return await this.find({ authorId }, params)
-    } catch (error) {
-      console.error(`Failed to fetch lessons by author ${authorId}:`, error)
-      throw error
-    }
+  async getLessonsByAuthor(authorId) {
+    const response = await this.rest.get(`${this.endpoint}/author/${authorId}`)
+    return response.data || response
   }
 
   // Add section to lesson

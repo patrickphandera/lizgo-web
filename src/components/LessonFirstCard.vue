@@ -15,6 +15,9 @@
           <div class="text-body1 text-weight-medium ellipsis q-px-sm">
             {{ lesson?.title }}
           </div>
+            <div class="text-caption  ellipsis q-px-sm">
+            {{ lesson?.description }}
+          </div>
         </div>
         <div class="text-caption flex q-px-xs">
           <q-chip square class="text-caption" dense>{{ lesson?.curriculumId?.title }}</q-chip>
@@ -26,18 +29,21 @@
           <q-chip square class="text-caption" dense> {{ lesson?.timeAgo }}</q-chip>
         </div>
         <div class="flex q-my-xs row q-pa-sm">
-          <div class="row q-gutter-sm">
-            <q-avatar size="40px">
+          <div class="row q-gutter-xs items-center">
+            <q-avatar size="30px">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
             </q-avatar>
             <div class="column">
-              <div square class="text-caption" dense>Patrick Phandera</div>
-              <div square class="text-caption text-grey-8" dense>30k Followers</div>
+              <div square class="text-caption text-capitalize" dense>{{ lesson.authorId?.firstName }} {{ lesson.authorId?.lastName }}</div>
+
               <q-space />
             </div>
+            <q-chip  square class="text-caption" dense>30k <q-icon name="mdi-account-multiple"></q-icon></q-chip>
           </div>
           <q-space></q-space>
-          <q-btn flat round dense icon="more_vert" />
+          <div>
+            <q-btn flat round dense icon="more_vert" />
+          </div>
         </div>
       </div>
     </q-card>
