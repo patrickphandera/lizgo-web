@@ -33,6 +33,7 @@ const routes = [
       { path: 'subjects', component: () => import('pages/SubjectsPage.vue') },
       { path: 'curriculums', component: () => import('pages/CurriculumsPage.vue') },
       { path: 'levels', component: () => import('pages/LevelsPage.vue') },
+      { path: 'topics', component: () => import('pages/TopicsPage.vue') },
     ],
   },
   {

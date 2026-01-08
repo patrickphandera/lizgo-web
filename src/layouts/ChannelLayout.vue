@@ -169,18 +169,23 @@ const linksList = [
   },
   {
     title: 'Curriculums',
-    icon: 'list',
+    icon: 'mdi-view-list-outline',
     link: '/students/curriculums',
   },
   {
     title: 'Levels',
-    icon: 'list',
+    icon: 'mdi-layers-outline',
     link: '/students/levels',
   },
   {
     title: 'Subjects',
-    icon: 'list',
+    icon: 'mdi-library',
     link: '/students/subjects',
+  },
+  {
+    title: 'Topics',
+    icon: 'mdi-bookmark-outline',
+    link: '/students/topics',
   },
   {
     title: 'Settings',

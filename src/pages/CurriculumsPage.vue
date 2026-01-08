@@ -60,9 +60,9 @@
             <div class="text-body2 q-mb-sm">
               {{ curriculum.description || '—' }}
             </div>
-            <div class="text-caption">
-              {{ curriculum.country ? `${curriculum.country} (${curriculum.country_code})` : '—' }}
-            </div>
+            <q-chip square class="text-caption">
+              {{ curriculum.country ? `${curriculum.country} - ${curriculum.country_code}` : '—' }}
+            </q-chip>
           </q-card-section>
         </q-card>
       </div>

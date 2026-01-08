@@ -96,13 +96,11 @@
             </div>
 
             <div class="row q-col-gutter-sm">
-              <div class="col">
-                <div class="text-caption text-grey-6">Curriculum</div>
-                <div class="text-body2">{{ subject.curriculumTitle || '—' }}</div>
+              <div>
+                <q-chip square class="text-caption">{{ subject.curriculumTitle || '—' }}</q-chip>
               </div>
-              <div class="col">
-                <div class="text-caption text-grey-6">Level</div>
-                <div class="text-body2">{{ subject.levelTitle || '—' }}</div>
+              <div>
+                <q-chip square class="text-caption">{{ subject.levelTitle || '—' }}</q-chip>
               </div>
             </div>
           </q-card-section>
