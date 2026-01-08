@@ -104,7 +104,7 @@
               </div>
               </div>
               <div>
-                <q-btn flat dense icon="mdi-unfold-more-horizontal" @click="$router.push(`/students/users/${user.id}`)"></q-btn>
+                <q-btn flat dense icon="mdi-unfold-more-horizontal" @click="$router.push(`/students/users/${user.id}/${user.authId}`)"></q-btn>
               </div>
             </div>
           </q-card-section>

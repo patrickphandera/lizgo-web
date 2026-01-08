@@ -35,7 +35,7 @@ const routes = [
       { path: 'levels', component: () => import('pages/LevelsPage.vue') },
       { path: 'topics', component: () => import('pages/TopicsPage.vue') },
       { path: 'users', component: () => import('pages/UsersPage.vue') },
-      { path: 'users/:id', component: () => import('pages/UserPage.vue') },
+      { path: 'users/:id/:authId', component: () => import('pages/UserPage.vue') },
     ],
   },
   {

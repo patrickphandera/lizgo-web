@@ -91,6 +91,7 @@ class LessonsService extends BaseDbService {
   // Get lessons by author
   async getLessonsByAuthor(authorId) {
     const response = await this.rest.get(`${this.endpoint}/author/${authorId}`)
+    console.log(response.data)
     return response.data || response
   }
 

@@ -15,6 +15,7 @@
     <div class="row q-mt-md">
       <div class="col-12">
         <q-card>
+
           <!-- Header with avatar -->
           <q-card-section class="row justify-between">
             <div class="row">
@@ -29,7 +30,7 @@
                   <q-badge color="teal" class="q-mr-sm">{{ user.status }}</q-badge>
                 </div>
                 <div class="text-caption">
-                  Contacts: patrick.phandera@example.com | +265 999 123 456
+                  Contacts: {{user.email}} | {{ user.phoneNumber }}
                 </div>
               </div>
             </div>
@@ -43,7 +44,7 @@
         </q-card>
       </div>
     </div>
-    <TeachersLessons></TeachersLessons>
+    <TeachersLessons :user="user"></TeachersLessons>
   </q-page>
 </template>
 

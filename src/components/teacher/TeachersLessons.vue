@@ -2,7 +2,7 @@
   <q-page>
     <div class="row justify-between q-mt-sm items-center">
       <div class="column">
-        <div class="text-weight-medium text-h6">Lessons from Patrick Phandera</div>
+        <div class="text-body1">Lessons from {{ user.firstName }} {{ user.lastName }}</div>
       </div>
       <div class="row q-gutter-md items-center">
         <!-- Level Filter -->
@@ -53,15 +53,21 @@ import LessonFirstCard from '../../components/LessonFirstCard.vue'
 import lessonsService from '../../services/lessons.service'
 import subjectsService from '../../services/subjects.service'
 import levelsService from '../../services/levels.service'
-
+import { useRoute } from 'vue-router'
 export default {
+  props: { user: {
+    type: Object,
+    required: true
+  }},
   components: {
     LessonFirstCard,
   },
   name: 'IndexPage',
 
   data() {
+     const route = useRoute()
     return {
+      id:route.params.authId,
       lessons: [],
       subjects: [],
       levels: [],
@@ -81,7 +87,7 @@ export default {
       this.loading = true
       try {
         const [lessons, subjects, levels] = await Promise.all([
-          lessonsService.getAll(),
+          lessonsService.getLessonsByAuthor(this.id),
           subjectsService.getAll(),
           levelsService.getAll(),
         ])
