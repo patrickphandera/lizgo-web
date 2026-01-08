@@ -2,7 +2,7 @@
   <div class="">
     <q-btn
       icon-right="add_shopping_cart"
-      class="text-white"
+      class="text-white width-full"
       no-caps
       label="Subscribe"
       color="primary"

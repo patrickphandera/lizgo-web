@@ -80,11 +80,11 @@
 </template>
 
 <script>
-import AddCredit from '../../components/AddCredit.vue'
+import AddCredit from '../components/AddCredit.vue'
 import LessonFirstCard from 'src/components/LessonFirstCard.vue'
 import lessonsService from 'src/services/lessons.service'
 import { ref } from 'vue'
-import AddLessonPage from '../../components/AddLessonPage.vue'
+import AddLessonPage from '../components/AddLessonPage.vue'
 export default {
   components: {
     LessonFirstCard,

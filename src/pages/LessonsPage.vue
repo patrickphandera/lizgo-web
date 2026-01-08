@@ -5,7 +5,14 @@
         <div class="text-weight-bold text-h6">Welcome to Lessons</div>
         <div>We have a variety of lessons tailored to your curriculum and levels of study.</div>
       </div>
-      <div class="row q-gutter-md items-center">
+
+<div class="row items-center justify-between">
+  <div class="lt-md">
+    <AddCredit />
+  </div>
+</div>
+
+      <div class="row q-gutter-md items-center gt-sm">
         <!-- Level Filter -->
         <q-select
           dense
@@ -17,7 +24,6 @@
           emit-value
           map-options
         />
-        <AddLessonPage />
         <AddCredit />
       </div>
     </div>
@@ -81,12 +87,9 @@ import LessonFirstCard from 'src/components/LessonFirstCard.vue'
 import lessonsService from 'src/services/lessons.service'
 import subjectsService from 'src/services/subjects.service'
 import levelsService from 'src/services/levels.service'
-import AddLessonPage from '../components/AddLessonPage.vue'
-
 export default {
   components: {
     LessonFirstCard,
-    AddLessonPage,
     AddCredit,
   },
   name: 'IndexPage',

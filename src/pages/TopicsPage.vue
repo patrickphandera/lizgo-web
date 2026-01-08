@@ -23,14 +23,7 @@
           map-options
         />
 
-        <q-btn
-          :disable="loading"
-          class="text-capitalize"
-          color="primary"
-          @click="openCreateModal"
-          icon="add"
-          label="New Topic"
-        />
+
       </div>
     </div>
 
@@ -218,9 +211,7 @@ watch(showCreateModal, (isOpen) => {
 })
 
 // === METHODS ===
-function openCreateModal() {
-  showCreateModal.value = true
-}
+
 
 async function createTopic() {
   const $q = useQuasar()

@@ -1,224 +1,378 @@
 <template>
-  <q-page class="q-px-md q-mt-md q-mb-md">
-    <div class="text-h6 row justify-between items-center">
-      Subjects
-      <q-btn color="primary" class="text-capitalize" @click="openNew">
-        + New Subject
-      </q-btn>
-    </div>
+  <q-page class="q-px-sm">
+    <!-- Header & Controls -->
+    <div class="row justify-between q-px-lg q-mt-sm items-center">
+      <div class="column">
+        <div class="text-weight-bold text-h6">Subjects</div>
+        <div>We have a variety of subjects tailored to your curriculum and levels of study.</div>
+      </div>
+      <div class="row q-gutter-md items-center">
+        <!-- Curriculum Filter -->
+        <q-select
+          dense
+          outlined
+          style="width: 200px"
+          v-model="selectedCurriculumId"
+          label="Curriculum"
+          class="text-capitalize"
+          color="primary"
+          :options="curriculumOptions"
+          option-value="id"
+          option-label="title"
+          emit-value
+          map-options
+        />
 
-    <!-- Filter -->
-    <div class="row q-mt-md">
-      <div class="col-12">
-        <q-select v-model="filterCurriculum" :options="curriculumOptions" option-label="title" option-value="id"
-          emit-value map-options label="Filter by Curriculum" dense outlined clearable />
+        <!-- Level Filter -->
+        <q-select
+          dense
+          outlined
+          style="width: 150px"
+          v-model="selectedLevelId"
+          label="Level"
+          class="text-capitalize"
+          color="primary"
+          :options="levelOptions"
+          option-value="id"
+          option-label="title"
+          emit-value
+          map-options
+        />
 
-        <q-table class="q-mt-md" :rows="filteredSubjects" :columns="columns" row-key="id">
-          <template #body-cell-actions="props">
-            <q-td align="right">
-              <q-btn dense flat icon="visibility" @click="viewItem(props.row)" />
-              <q-btn dense flat icon="edit" @click="editItem(props.row)" />
-              <q-btn dense flat icon="delete" color="negative" @click="removeItem(props.row)" />
-            </q-td>
-          </template>
-        </q-table>
+        <!-- New Subject Button -->
+        <q-btn
+          class="text-capitalize"
+          color="primary"
+          @click="openNewSubject"
+          icon="add"
+          label="New Subject"
+        />
       </div>
     </div>
 
-    <!-- Create / Edit Dialog -->
-    <q-dialog v-model="dialog.show">
-      <q-card style="min-width: 400px; max-width: 700px">
-        <q-card-section class="row justify-between">
-          <div class="text-h6">
-            {{ dialog.mode === 'edit' ? 'Edit' : 'New' }} Subject
-          </div>
-          <q-btn flat icon="close" v-close-popup />
-        </q-card-section>
+    <!-- Search -->
+    <div class="q-px-lg q-mt-md">
+      <q-input
+        class="thick-border"
+        dense
+        color="primary"
+        outlined
+        v-model="searchText"
+        label="Search Subjects"
+        style="width: 100%"
+      >
+        <template v-slot:prepend>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+    </div>
 
-        <q-separator />
+    <!-- Loading Skeletons -->
+    <div v-if="loading" class="row q-col-gutter-md q-mx-md q-mt-lg">
+      <div v-for="i in 6" :key="'skeleton-' + i" class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <q-card class="q-pa-md">
+          <q-skeleton type="rect" height="180px" />
+        </q-card>
+      </div>
+    </div>
 
+    <!-- No Results -->
+    <div v-else-if="filteredSubjects.length === 0" class="text-center q-mt-xl text-grey-7 q-px-lg">
+      No subjects match your filters.
+    </div>
+
+    <!-- Subject Cards -->
+    <div v-else class="row q-col-gutter-md q-mx-sm q-mt-xs">
+      <div
+        v-for="subject in filteredSubjects"
+        :key="subject.id"
+        class="col-12 col-sm-6 col-md-4 col-lg-3"
+      >
+        <q-card class="subject-card">
+          <q-card-section>
+            <div class="text-h6 q-mb-xs">{{ subject.title }}</div>
+            <div class="text-body2 text-grey-8 q-mb-md">
+              {{ subject.description || '—' }}
+            </div>
+
+            <div class="row q-col-gutter-sm">
+              <div>
+                <q-chip square class="text-caption">{{ subject.curriculumTitle || '—' }}</q-chip>
+              </div>
+              <div>
+                <q-chip square class="text-caption">{{ subject.levelTitle || '—' }}</q-chip>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <!-- Create Subject Modal -->
+    <q-dialog v-model="showCreateModal" persistent>
+      <q-card style="min-width: 400px; width: 500px">
         <q-card-section>
-          <div class="row q-gutter-sm">
-            <div class="col-12">
-              <q-input v-model="form.title" label="Title" dense outlined />
-            </div>
-
-            <div class="col-12">
-              <q-select v-model="form.levelId" :options="levelOptions" option-label="title" option-value="id" emit-value
-                map-options label="Level" dense outlined />
-            </div>
-
-            <div class="col-12">
-              <q-select v-model="form.curriculumId" :options="curriculumOptions" option-label="title" option-value="id"
-                emit-value map-options label="Curriculum" dense outlined />
-            </div>
-
-            <div class="col-12">
-              <q-input v-model="form.description" type="textarea" label="Description" dense outlined />
-            </div>
-          </div>
+          <div class="text-h6">Create New Subject</div>
         </q-card-section>
 
-        <q-separator />
+        <q-card-section class="q-pt-none">
+          <q-form @submit="createSubject" ref="createFormRef">
+            <!-- Title -->
+            <q-input
+              dense
+              outlined
+              v-model="newSubject.title"
+              label="Title *"
+              lazy-rules
+              :rules="[(val) => !!val || 'Title is required']"
+            />
 
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn color="primary" label="Save" @click="save" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+            <!-- Description -->
+            <q-input
+              dense
+              outlined
+              v-model="newSubject.description"
+              label="Description"
+              class="q-mt-sm"
+              type="textarea"
+              rows="3"
+            />
 
-    <!-- View Dialog -->
-    <q-dialog v-model="viewDialog.show">
-      <q-card style="min-width: 300px">
-        <q-card-section class="row justify-between">
-          <div class="text-h6">View Subject</div>
-          <q-btn flat icon="close" v-close-popup />
+            <!-- Curriculum -->
+            <q-select
+              dense
+              outlined
+              v-model="newSubject.curriculumId"
+              :options="allCurriculums"
+              option-value="id"
+              option-label="title"
+              label="Curriculum *"
+              lazy-rules
+              :rules="[(val) => !!val || 'Curriculum is required']"
+              class="q-mt-sm"
+              @update:model-value="onCurriculumChange"
+              emit-value
+              map-optionsad
+            />
+
+            <!-- Level -->
+            <q-select
+              dense
+              outlined
+              v-model="newSubject.levelId"
+              :options="modalLevelOptions"
+              option-value="id"
+              option-label="title"
+              label="Level *"
+              lazy-rules
+              :disable="!newSubject.curriculumId"
+              :hint="!newSubject.curriculumId ? 'Select a curriculum first' : ''"
+              :rules="[(val) => !!val || 'Level is required']"
+              class="q-mt-sm"
+            />
+          </q-form>
         </q-card-section>
 
-        <q-separator />
-
-        <q-card-section>
-          <div><strong>Title:</strong> {{ viewDialog.item.title }}</div>
-          <div><strong>Level:</strong> {{ getLevelTitle(viewDialog.item.levelId) }}</div>
-          <div><strong>Curriculum:</strong> {{ getCurriculumTitle(viewDialog.item.curriculumId) }}</div>
-          <div class="q-mt-sm">
-            <strong>Description:</strong>
-            <div>{{ viewDialog.item.description }}</div>
-          </div>
-        </q-card-section>
-
-        <q-separator />
-
-        <q-card-actions align="right">
-          <q-btn flat label="Close" v-close-popup />
+        <q-card-actions align="right" class="q-pr-md">
+          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn
+            unelevated
+            label="Create"
+            color="primary"
+            @click="createSubject"
+            :loading="creating"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
   </q-page>
 </template>
 
-<script>
-import { defineComponent, ref, computed, onMounted } from 'vue'
-import subjectsService from 'src/services/subjects.service'
-import levelsService from 'src/services/levels.service'
-import curriculaService from 'src/services/curriculums.service'
+<script setup>
+import { ref, onMounted, computed, watch } from 'vue'
+import { useQuasar } from 'quasar'
+import SubjectsService from 'src/services/subjects.service.js'
+import CurriculumsService from 'src/services/curriculums.service.js'
+import LevelsService from 'src/services/levels.service.js'
 
-export default defineComponent({
-  name: 'SubjectAdminPage',
-  setup() {
-    const subjects = ref([])
-    const levelOptions = ref([])
-    const curriculumOptions = ref([])
-    const filterCurriculum = ref(null)
+// === FILTERS ===
+const selectedCurriculumId = ref(null)
+const selectedLevelId = ref(null)
+const searchText = ref('')
 
-    const dialog = ref({ show: false, mode: 'new', id: null })
-    const viewDialog = ref({ show: false, item: {} })
+// === DATA ===
+const subjects = ref([])
+const allCurriculums = ref([])
+const allLevels = ref([])
+const loading = ref(true)
 
-    const form = ref({
-      title: '',
-      levelId: null,
-      curriculumId: null,
-      description: ''
-    })
+// === MODAL ===
+const showCreateModal = ref(false)
+const newSubject = ref({
+  title: '',
+  description: '',
+  curriculumId: null,
+  levelId: null,
+})
+const creating = ref(false)
+const createFormRef = ref(null)
 
-    const columns = [
-      { name: 'title', label: 'Title', field: 'title', align: 'left' },
-      {
-        name: 'level',
-        label: 'Level',
-        field: row =>
-          levelOptions.value.find(l => l.id === row.levelId)?.title || '-'
-      },
-      {
-        name: 'curriculum',
-        label: 'Curriculum',
-        field: row =>
-          curriculumOptions.value.find(c => c.id === row.curriculumId)?.title || '-'
-      },
-      { name: 'description', label: 'Description', field: 'description' },
-      { name: 'actions', label: 'Actions', field: 'actions', sortable: false }
-    ]
+// === COMPUTED: Filters ===
+const curriculumOptions = computed(() => {
+  return [{ id: null, title: 'All' }, ...allCurriculums.value]
+})
 
-    const loadAll = async () => {
-      try {
-        const [subjectsRes, levelsRes, curriculaRes] = await Promise.all([
-          subjectsService.list(),
-          levelsService.list(),
-          curriculaService.list()
-        ])
+const levelOptions = computed(() => {
+  if (!selectedCurriculumId.value) {
+    return [{ id: null, title: 'All' }, ...allLevels.value]
+  }
+  const filtered = allLevels.value.filter(
+    (level) => level.curriculumId === selectedCurriculumId.value,
+  )
+  return [{ id: null, title: 'All' }, ...filtered]
+})
 
-        subjects.value = subjectsRes?.data ?? subjectsRes ?? []
-        levelOptions.value = levelsRes?.data ?? levelsRes ?? []
-        curriculumOptions.value = curriculaRes?.data ?? curriculaRes ?? []
-      } catch (e) {
-        console.error('Load failed', e)
-      }
+// === COMPUTED: Modal Levels ===
+const modalLevelOptions = computed(() => {
+  console.log('🔍 modal: selected curriculumId =', newSubject.value.curriculumId)
+  console.log('🔍 modal: total levels =', allLevels.value.length)
+
+  if (!newSubject.value.curriculumId) {
+    console.log('→ returning ALL levels (no curriculum selected)')
+    return allLevels.value
+  }
+
+  const matched = allLevels.value.filter((level) => {
+    const match = level.curriculumId === newSubject.value.curriculumId
+    if (match) {
+      console.log('✅ Match found:', level.title, 'for curriculum', newSubject.value.curriculumId)
     }
+    return match
+  })
 
-    onMounted(loadAll)
+  console.log('→ matched levels count:', matched.length)
+  return matched
+})
 
-    const filteredSubjects = computed(() => {
-      if (!filterCurriculum.value) return subjects.value
-      return subjects.value.filter(
-        s => s.curriculumId === filterCurriculum.value
-      )
-    })
+// === COMPUTED: Enriched Subjects ===
+const curriculumMap = computed(() => {
+  const map = {}
+  allCurriculums.value.forEach((c) => {
+    map[c.id] = c.title
+  })
+  return map
+})
 
-    function openNew() {
-      dialog.value = { show: true, mode: 'new', id: null }
-      form.value = { title: '', levelId: null, curriculumId: null, description: '' }
-    }
+const levelMap = computed(() => {
+  const map = {}
+  allLevels.value.forEach((l) => {
+    map[l.id] = l.title
+  })
+  return map
+})
 
-    function editItem(row) {
-      dialog.value = { show: true, mode: 'edit', id: row.id }
-      form.value = { ...row }
-    }
+const enrichedSubjects = computed(() => {
+  return subjects.value.map((subj) => ({
+    ...subj,
+    id: subj.id || subj.id,
+    curriculumTitle: curriculumMap.value[subj.curriculumId] || '—',
+    levelTitle: levelMap.value[subj.levelId] || '—',
+  }))
+})
 
-    function viewItem(row) {
-      viewDialog.value = { show: true, item: row }
-    }
+const filteredSubjects = computed(() => {
+  let list = enrichedSubjects.value
 
-    async function removeItem(row) {
-      if (!row.id || !confirm('Delete this subject?')) return
-      await subjectsService.deleteSubject(row.id)
-      await loadAll()
-    }
+  if (selectedCurriculumId.value) {
+    list = list.filter((s) => s.curriculumId === selectedCurriculumId.value)
+  }
+  if (selectedLevelId.value) {
+    list = list.filter((s) => s.levelId === selectedLevelId.value)
+  }
+  if (searchText.value.trim()) {
+    const term = searchText.value.toLowerCase().trim()
+    list = list.filter(
+      (s) =>
+        s.title.toLowerCase().includes(term) ||
+        (s.description && s.description.toLowerCase().includes(term)),
+    )
+  }
+  return list
+})
 
-    async function save() {
-      if (dialog.value.mode === 'edit') {
-        await subjectsService.updateSubject(dialog.value.id, form.value)
-      } else {
-        await subjectsService.createSubject(form.value)
-      }
+// === WATCHERS ===
+watch(selectedCurriculumId, () => {
+  selectedLevelId.value = null
+})
 
-      dialog.value.show = false
-      await loadAll()
-    }
-
-    const getLevelTitle = id =>
-      levelOptions.value.find(l => l.id === id)?.title || '-'
-
-    const getCurriculumTitle = id =>
-      curriculumOptions.value.find(c => c.id === id)?.title || '-'
-
-    return {
-      columns,
-      dialog,
-      viewDialog,
-      form,
-      levelOptions,
-      curriculumOptions,
-      filterCurriculum,
-      filteredSubjects,
-      openNew,
-      editItem,
-      viewItem,
-      removeItem,
-      save,
-      getLevelTitle,
-      getCurriculumTitle
-    }
+watch(showCreateModal, (isOpen) => {
+  if (!isOpen) {
+    newSubject.value = { title: '', description: '', curriculumId: null, levelId: null }
+    creating.value = false
+    createFormRef.value?.resetValidation()
   }
 })
+
+// === METHODS ===
+function onCurriculumChange() {
+  newSubject.value.levelId = null
+}
+
+function openNewSubject() {
+  showCreateModal.value = true
+}
+
+async function createSubject() {
+  const $q = useQuasar()
+  const valid = await createFormRef.value?.validate()
+  if (!valid) return
+
+  creating.value = true
+  try {
+    const payload = {
+      title: newSubject.value.title.trim(),
+      description: newSubject.value.description?.trim() || '',
+      curriculumId: newSubject.value.curriculumId,
+      levelId: newSubject.value.levelId.id,
+    }
+
+    const created = await SubjectsService.createSubject(payload)
+    subjects.value.push(created)
+
+    $q.notify({ color: 'positive', message: 'Subject created successfully!' })
+    showCreateModal.value = false
+  } catch (error) {
+    console.error('Create subject error:', error)
+    $q.notify({ color: 'negative', message: 'Failed to create subject. Please try again.' })
+  } finally {
+    creating.value = false
+  }
+}
+
+// === INIT ===
+onMounted(() => {
+  loadData()
+})
+
+async function loadData() {
+  loading.value = true
+  try {
+    const levelsData = await LevelsService.list()
+    console.log('✅ RAW LEVELS FROM API:', levelsData)
+
+    // Also check one subject to confirm linkage
+    const subjectsData = await SubjectsService.list()
+    console.log('✅ SAMPLE SUBJECT:', subjectsData[0])
+
+    const curriculumsData = await CurriculumsService.list()
+
+    subjects.value = subjectsData
+    allCurriculums.value = curriculumsData
+    allLevels.value = levelsData
+  } catch (error) {
+    console.error('Failed to load ', error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>

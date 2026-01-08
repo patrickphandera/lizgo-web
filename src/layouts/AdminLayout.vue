@@ -1,37 +1,82 @@
 <template>
-  <q-layout view="lHh Lpr lff">
-    <q-header class="bg-white shadow-1" bordered>
+  <q-layout view="hHh Lpr lff">
+    <q-header elevated class="bg-primary">
       <q-toolbar>
-        <q-btn flat round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" size="md" class="text-black" />
-        <div class="text-weight-medium text-h6 text-capitalize text-primary">
-          Admin Panel
-        </div>
+        <q-btn
+          flat
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="drawer=!drawer"
+          size="md"
+          color="white"
+        />
+        <div class="text-weight-medium text-body1 text-capitalize text-white">Lizgo Learning</div>
 
-        <q-toolbar-title class="text-weight-bold text-capitalize text-h6 "></q-toolbar-title>
+        <q-toolbar-title class="text-weight-bold text-capitalize text-h6"></q-toolbar-title>
 
-
-
-        <!-- <div class="absolute-center row items-center q-gutter-md q-pt-md" style="max-width: 900px; width: 100%;">
-          <q-card class="shadow-0 q-mt-md " style="flex: 2; min-width: 300px;">
-            <q-input dense outlined v-model="text" label="Search Lessons" style="width: 100%;">
-              <template v-slot:prepend>
-                <q-icon dense unelevated name="
-                  search" />
-              </template>
-            </q-input>
-          </q-card>
-        </div> -->
         <div>
-
           <div>
-
-
-            <q-btn color="grey-1" round icon="notifications" class="q-mx-sm text-black" unelevated>
+            <personal-chat-dialog v-model="open" :conversation-id="conversationId" />
+            <q-btn size="12px" unelevated round icon="forumn">
+              <q-badge color="red" floating>4</q-badge>
+              <q-menu transition-show="scale" transition-hide="scale">
+                <q-list separator style="min-width: 200px" class="q-pb-md">
+                  <q-item>
+                    <q-item-section class="text-body1"> Messages </q-item-section>
+                    <q-item-section avatar>
+                      <q-btn flat dense icon="close"></q-btn>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable @click="open = true" class="column">
+                    <q-item-section>
+                      <q-item-label class="row justify-between text-caption"
+                        >Williams Jere
+                        <q-chip square dense class="text-caption" size="sm"
+                          >1 Min Ago.</q-chip
+                        ></q-item-label
+                      >
+                      <q-item-label caption class="ellipsis text-body1"
+                        >Man, mundithandizako ma quiz aja?</q-item-label
+                      >
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable @click="open = true">
+                    <q-item-section>
+                      <q-item-label class="row justify-between"
+                        >Williams Jere
+                        <q-chip square dense class="text-caption" size="sm"
+                          >1 Min Ago.</q-chip
+                        ></q-item-label
+                      >
+                      <q-item-label caption class="ellipsis"
+                        >Man, mundithandizako ma quiz aja?</q-item-label
+                      >
+                    </q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <q-item clickable @click="open = true">
+                    <q-item-section>
+                      <q-item-label class="row justify-between"
+                        >Williams Jere
+                        <q-chip square dense class="text-caption" size="sm"
+                          >1 Min Ago.</q-chip
+                        ></q-item-label
+                      >
+                      <q-item-label caption class="ellipsis"
+                        >Man, mundithandizako ma quiz aja?</q-item-label
+                      >
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+            <q-btn flat size="12px" color="white" round icon="notifications" unelevated>
               <q-badge color="red" floating>4</q-badge>
             </q-btn>
 
-            <q-btn outline>
-              <q-avatar color="primary" class="text-sub-title shadow-1" clickable>
+            <q-btn unelevated>
+              <q-avatar size="md" color="white" class="text-caption shadow-1 text-black" clickable>
                 p
               </q-avatar>
               <q-menu>
@@ -43,7 +88,9 @@
                       <q-list style="min-width: 200px">
                         <q-item clickable>
                           <q-item-section>Teacher </q-item-section>
-                          <q-item-section avatar><q-icon name="keyboard_arrow_up"></q-icon></q-item-section>
+                          <q-item-section avatar
+                            ><q-icon name="keyboard_arrow_up"></q-icon
+                          ></q-item-section>
                         </q-item>
                       </q-list>
                     </q-menu>
@@ -56,75 +103,59 @@
               </q-menu>
             </q-btn>
           </div>
-
-
         </div>
       </q-toolbar>
-
-
     </q-header>
-    <q-drawer class="shadow-2" :width="200" behavior="desktop" v-model="leftDrawerOpen" show-if-above>
-      <q-list class="row justify-center q-mt-xs q-mb-xs">
-        <q-avatar class="shadow-3 q-mb-md ">
-          <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-        </q-avatar>
-      </q-list>
-      <!-- <q-separator class="q-mx-lg shadow-3"></q-separator> -->
-      <q-list>
 
+    <q-drawer
+      v-model="drawer"
+      show-if-above
+      :mini="miniState"
+      @mouseenter="miniState = false"
+      @mouseleave="miniState = true"
+      mini-to-overlay
+      :width="200"
+      :breakpoint="500"
+      bordered
+      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+    >
+      <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
+        <q-list class="">
+          <q-item
+            clickable
+            v-ripple
+            v-for="(link, index) in linksList"
+            v-bind:key="index"
+            :to="link.link"
+          >
+            <q-item-section avatar>
+              <q-icon :name="link.icon" />
+            </q-item-section>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-      <!-- <q-list class="">
-        <q-item-label header>Essential Actions </q-item-label>
-      </q-list> -->
-      <!-- <AddLessonPage></AddLessonPage> -->
+            <q-item-section> {{ link.title }} </q-item-section>
+          </q-item>
+
+          <!-- <q-separator /> -->
+        </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
-
-
       <router-view />
     </q-page-container>
-
   </q-layout>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-import EssentialLink from 'components/AdminEssentialLink.vue'
+// import EssentialLink from 'components/EssentialLink.vue'
 // import AddLessonPage from 'src/components/AddLessonPage.vue'
 
 const linksList = [
   {
     title: 'Home',
     icon: 'home',
-    link: '/admin',
-  },
-  {
-    title: 'Students',
-    icon: 'mdi-account-multiple',
-    link: '/admin/students',
-  },
-  {
-    title: 'Curriculums',
-    icon: 'mdi-currency-eth',
-    link: '/admin/curriculums',
-  },
-  {
-    title: 'Levels',
-    icon: 'mdi-filter-variant',
-    link: '/admin/levels',
-  },
-  {
-    title: 'Subjects',
-    icon: 'mdi-text-long',
-    link: '/admin/subjects',
-  },
-  {
-    title: 'Topics',
-    icon: 'mdi-text-box-multiple',
-    link: '/admin/topics',
+    link: '/admin/home',
   },
   {
     title: 'Lessons',
@@ -132,27 +163,58 @@ const linksList = [
     link: '/admin/lessons',
   },
   {
-    title: 'Quizzes',
-    icon: 'mdi-help-circle',
-    link: '/admin/quizzes',
+    title: 'Channels',
+    icon: 'mdi-crowd',
+    link: '/admin/channels',
   },
   {
-    title: 'Discussions',
+    title: 'Curriculums',
+    icon: 'mdi-view-list-outline',
+    link: '/admin/curriculums',
+  },
+  {
+    title: 'Levels',
+    icon: 'mdi-layers-outline',
+    link: '/admin/levels',
+  },
+  {
+    title: 'Subjects',
+    icon: 'mdi-library',
+    link: '/admin/subjects',
+  },
+  {
+    title: 'Topics',
+    icon: 'mdi-bookmark-outline',
+    link: '/admin/topics',
+  },
+  {
+    title: 'Users',
     icon: 'mdi-account-group',
-    link: '/admin/discussions',
-  }
+    link: '/admin/users',
+  },
+  {
+    title: 'Settings',
+    icon: 'mdi-cog',
+    link: '/admin/settings',
+  },
 ]
-
+import { ref } from 'vue'
+import PersonalChatDialog from 'src/components/PersonalChatDialog.vue'
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
     // AddLessonPage,
-    EssentialLink,
+
+    PersonalChatDialog,
   },
 
   data() {
     return {
+      drawer:ref(false),
+      miniState: ref(true),
+      open: false,
+      conversationId: '694f4edcf2566fb1b6d36778',
       categories: ['All'],
       levels: ['All'],
       linksList,

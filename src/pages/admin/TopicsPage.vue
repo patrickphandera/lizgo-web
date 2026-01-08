@@ -1,197 +1,280 @@
 <template>
-  <q-page class="q-px-md q-mt-md q-mb-md">
-    <div class="text-h6 row justify-between items-center">
-      Topics
-      <q-btn color="primary" class="text-capitalize" @click="openNew">
-        + New Topic
-      </q-btn>
-    </div>
-    <div class="row q-mt-md">
-      <div class="col-12">
-        <q-table flat bordered :rows="topics" :columns="columns" row-key="id" class="q-mt-md">
-          <template v-slot:body-cell-subject="props">
-            <q-td align="right">
-              {{
-                props.row.subjectId.label }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-actions="props">
-            <q-td align="right">
-              <q-btn dense flat icon="visibility" @click="viewItem(props.row)" />
-              <q-btn dense flat icon="edit" @click="editItem(props.row)" />
-              <q-btn dense flat icon="delete" color="negative" @click="removeItem(props.row)" />
-            </q-td>
-          </template>
-        </q-table>
+  <q-page class="q-px-sm">
+    <!-- Header & Controls -->
+    <div class="row justify-between q-px-lg q-mt-sm items-center">
+      <div class="column">
+        <div class="text-weight-bold text-h6">Topics</div>
+        <div>Manage lesson topics organized by subject.</div>
+      </div>
+      <div class="row q-gutter-md items-center">
+        <!-- Subject Filter -->
+        <q-select
+          dense
+          outlined
+          style="width: 220px"
+          v-model="selectedSubjectId"
+          label="Subject"
+          class="text-capitalize"
+          color="primary"
+          :options="subjectOptions"
+          option-value="id"
+          option-label="title"
+          emit-value
+          map-options
+        />
+
+        <q-btn
+          :disable="loading"
+          class="text-capitalize"
+          color="primary"
+          @click="openCreateModal"
+          icon="add"
+          label="New Topic"
+        />
       </div>
     </div>
 
-    <!-- Create / Edit -->
-    <q-dialog v-model="dialog.show">
-      <q-card style="min-width: 400px; max-width: 700px">
-        <q-card-section class="row justify-between">
-          <div class="text-h6">{{ dialog.mode === 'edit' ? 'Edit' : 'New' }} Topic</div>
-          <q-btn flat icon="close" v-close-popup />
-        </q-card-section>
+    <!-- Search -->
+    <div class="q-px-lg q-mt-md">
+      <q-input
+        class="thick-border"
+        dense
+        color="primary"
+        outlined
+        v-model="searchText"
+        label="Search Topics"
+        style="width: 100%"
+      >
+        <template v-slot:prepend>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+    </div>
 
-        <q-separator />
+    <!-- Loading Skeletons -->
+    <div v-if="loading" class="row q-col-gutter-md q-mx-md q-mt-lg">
+      <div v-for="i in 6" :key="'skeleton-' + i" class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <q-card class="q-pa-md">
+          <q-skeleton type="rect" height="160px" />
+        </q-card>
+      </div>
+    </div>
 
+    <!-- No Results -->
+    <div v-else-if="filteredTopics.length === 0" class="text-center q-mt-xl text-grey-7 q-px-lg">
+      No topics match your filters.
+    </div>
+
+    <!-- Topic Cards -->
+    <div v-else class="row q-col-gutter-md q-mx-sm q-mt-xs">
+      <div
+        v-for="topic in filteredTopics"
+        :key="topic.id"
+        class="col-12 col-sm-6 col-md-4 col-lg-3"
+      >
+        <q-card class="topic-card">
+          <q-card-section>
+            <div class="text-h6 q-mb-xs">{{ topic.title }}</div>
+            <div class="text-body2 q-mb-sm">
+              {{ topic.description || '—' }}
+            </div>
+            <q-chip square dense class="text-caption">
+              {{ subjectMap[topic.subjectId] || '—' }}
+            </q-chip>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <!-- Create Topic Modal -->
+    <q-dialog v-model="showCreateModal" persistent>
+      <q-card style="min-width: 400px; width: 500px">
         <q-card-section>
-          <div class="row q-gutter-sm q-mt-sm">
-            <div class="col-12">
-              <q-input v-model="form.title" label="Title" dense outlined />
-            </div>
-
-            <div class="col-12">
-              <q-select v-model="form.subjectId" :options="subjectOptions" option-label="label" option-value="value"
-                label="Subject" dense outlined />
-            </div>
-
-            <div class="col-12">
-              <q-input v-model="form.description" type="textarea" label="Description" dense outlined />
-            </div>
-          </div>
+          <div class="text-h6">Create New Topic</div>
         </q-card-section>
 
-        <q-separator />
+        <q-card-section class="q-pt-none">
+          <q-form @submit="createTopic" ref="createFormRef">
+            <q-input
+              dense
+              outlined
+              v-model="newTopic.title"
+              label="Title *"
+              lazy-rules
+              :rules="[(val) => !!val || 'Title is required']"
+            />
 
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn color="primary" label="Save" @click="save" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+            <q-input
+              dense
+              outlined
+              v-model="newTopic.description"
+              label="Description"
+              class="q-mt-sm"
+              type="textarea"
+              rows="3"
+            />
 
-    <!-- View -->
-    <q-dialog v-model="viewDialog.show">
-      <q-card style="min-width: 300px">
-        <q-card-section class="row justify-between">
-          <div class="text-h6">View Topic</div>
-          <q-btn flat icon="close" v-close-popup />
+            <!-- Subject (required) -->
+            <q-select
+              dense
+              outlined
+              v-model="newTopic.subjectId"
+              :options="allSubjects"
+              option-value="id"
+              option-label="title"
+              label="Subject *"
+              lazy-rules
+              :rules="[(val) => !!val || 'Subject is required']"
+              class="q-mt-sm"
+              emit-value
+              map-options
+            />
+          </q-form>
         </q-card-section>
 
-        <q-separator />
-
-        <q-card-section>
-          <div><strong>Title:</strong> {{ viewDialog.item.title }}</div>
-          <div><strong>Subject:</strong> {{ subjectMap[viewDialog.item.subjectId] }}</div>
-          <div class="q-mt-sm">
-            <strong>Description:</strong>
-            <div>{{ viewDialog.item.description }}</div>
-          </div>
-        </q-card-section>
-
-        <q-separator />
-
-        <q-card-actions align="right">
-          <q-btn flat label="Close" v-close-popup />
+        <q-card-actions align="right" class="q-pr-md">
+          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn
+            unelevated
+            label="Create"
+            color="primary"
+            @click="createTopic"
+            :loading="creating"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
   </q-page>
 </template>
 
-<script>
-import { defineComponent, ref, onMounted } from 'vue'
-import topicsService from 'src/services/topics.service'
-import subjectsService from 'src/services/subjects.service'
+<script setup>
+import { ref, onMounted, computed, watch } from 'vue'
+import { useQuasar } from 'quasar'
+import TopicsService from 'src/services/topics.service.js'
+import SubjectsService from 'src/services/subjects.service.js'
 
-export default defineComponent({
-  name: 'TopicAdminPage',
-  setup() {
-    const topics = ref([])
+// === FILTERS ===
+const selectedSubjectId = ref(null)
+const searchText = ref('')
 
-    const subjectOptions = ref([])
+// === DATA ===
+const topics = ref([])
+const allSubjects = ref([])
+const loading = ref(true)
 
-    const subjectMap = {}
+// === MODAL ===
+const showCreateModal = ref(false)
+const newTopic = ref({
+  title: '',
+  description: '',
+  subjectId: null,
+})
+const creating = ref(false)
+const createFormRef = ref(null)
 
-    const columns = [
-      { name: 'title', label: 'Title', field: row => row.title, align: 'left' },
-      { name: 'subject', label: 'Subject', field: row => subjectMap[row.subjectId] || row.subjectId },
-      { name: 'description', label: 'Description', field: 'description' },
-      { name: 'actions', label: 'Actions', field: 'actions', sortable: false }
-    ]
+// === COMPUTED: Subject options for filter ===
+const subjectOptions = computed(() => {
+  return [{ id: null, title: 'All' }, ...allSubjects.value]
+})
 
-    const dialog = ref({ show: false, mode: 'new', id: null })
-    const viewDialog = ref({ show: false, item: {} })
+// === COMPUTED: Subject lookup map ===
+const subjectMap = computed(() => {
+  const map = {}
+  allSubjects.value.forEach((s) => {
+    map[s.id] = s.title
+  })
+  return map
+})
 
-    const form = ref({
-      title: '',
-      subjectId: '',
-      description: ''
-    })
+// === COMPUTED: Filtered topics ===
+const filteredTopics = computed(() => {
+  let list = topics.value
 
-    const load = async () => {
-      try {
-        const [topicsRes, subjectsRes] = await Promise.all([
-          topicsService.list(),
-          subjectsService.list()
-        ])
+  // Filter by subject
+  if (selectedSubjectId.value) {
+    list = list.filter((t) => t.subjectId === selectedSubjectId.value)
+  }
 
-        topics.value = topicsRes?.data ?? topicsRes ?? []
+  // Search by title or description
+  if (searchText.value.trim()) {
+    const term = searchText.value.toLowerCase().trim()
+    list = list.filter(
+      (t) =>
+        t.title.toLowerCase().includes(term) ||
+        (t.description && t.description.toLowerCase().includes(term)),
+    )
+  }
 
-        subjectOptions.value = (subjectsRes?.data ?? subjectsRes ?? []).map(l => {
-          subjectMap[l.id] = l.title
-          return { label: l.title, value: l.id }
-        })
+  return list
+})
 
-      } catch (err) {
-        console.error('Load failed', err)
-      }
-    }
-
-    onMounted(load)
-
-
-    function openNew() {
-      dialog.value = { show: true, mode: 'new', id: null }
-      form.value = { title: '', subjectId: '', description: '' }
-    }
-
-    function editItem(row) {
-      dialog.value = { show: true, mode: 'edit', id: row.id }
-      form.value = {
-        title: row.title,
-        subjectId: row.subjectId,
-        description: row.description
-      }
-    }
-
-    function viewItem(row) {
-      viewDialog.value = { show: true, item: row }
-    }
-
-    async function removeItem(row) {
-      if (!row.id || !confirm('Delete this topic?')) return
-      await topicsService.deleteTopic(row.id)
-      await load()
-    }
-
-    async function save() {
-      if (dialog.value.mode === 'edit') {
-        await topicsService.updateTopic(dialog.value.id, form.value)
-      } else {
-        await topicsService.createTopic(form.value)
-      }
-
-      dialog.value.show = false
-      await load()
-    }
-
-    return {
-      topics,
-      columns,
-      dialog,
-      viewDialog,
-      form,
-      openNew,
-      save,
-      editItem,
-      removeItem,
-      viewItem,
-      subjectOptions,
-      subjectMap,
-    }
+// === WATCHERS ===
+watch(showCreateModal, (isOpen) => {
+  if (!isOpen) {
+    newTopic.value = { title: '', description: '', subjectId: null }
+    creating.value = false
+    createFormRef.value?.resetValidation()
   }
 })
+
+// === METHODS ===
+function openCreateModal() {
+  showCreateModal.value = true
+}
+
+async function createTopic() {
+  const $q = useQuasar()
+  const valid = await createFormRef.value?.validate()
+  if (!valid) return
+
+  creating.value = true
+  try {
+    const payload = {
+      title: newTopic.value.title.trim(),
+      description: newTopic.value.description?.trim() || '',
+      subjectId: newTopic.value.subjectId,
+    }
+
+    const created = await TopicsService.createTopic(payload)
+    topics.value.push(created)
+
+    $q.notify({ color: 'positive', message: 'Topic created successfully!' })
+    showCreateModal.value = false
+  } catch (error) {
+    console.error('Create topic error:', error)
+    $q.notify({ color: 'negative', message: 'Failed to create topic. Please try again.' })
+  } finally {
+    creating.value = false
+  }
+}
+
+// === INIT ===
+onMounted(() => {
+  loadData()
+})
+
+async function loadData() {
+  loading.value = true
+  try {
+    const [topicsData, subjectsData] = await Promise.all([
+      TopicsService.list(),
+      SubjectsService.list(),
+    ])
+
+    topics.value = topicsData.map((item) => ({
+      ...item,
+      id: item.id || item._id,
+    }))
+
+    allSubjects.value = subjectsData.map((item) => ({
+      ...item,
+      id: item.id || item._id,
+    }))
+  } catch (error) {
+    console.error('Failed to load ', error)
+    useQuasar().notify({ color: 'negative', message: 'Failed to load data.' })
+  } finally {
+    loading.value = false
+  }
+}
 </script>

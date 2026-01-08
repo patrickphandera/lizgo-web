@@ -7,7 +7,7 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="toggleLeftDrawer"
+          @click="drawer=!drawer"
           size="md"
           color="white"
         />
@@ -211,6 +211,7 @@ export default defineComponent({
 
   data() {
     return {
+      drawer:ref(false),
       miniState: ref(true),
       open: false,
       conversationId: '694f4edcf2566fb1b6d36778',

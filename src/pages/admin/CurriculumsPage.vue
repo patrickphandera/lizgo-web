@@ -18,6 +18,15 @@
             <q-icon name="search" />
           </template>
         </q-input>
+
+        <q-btn
+          :disable="loading"
+          class="text-capitalize"
+          color="primary"
+          @click="openCreateModal"
+          icon="add"
+          label="New Curriculum"
+        />
       </div>
     </div>
 
@@ -167,6 +176,9 @@ watch(showCreateModal, (isOpen) => {
 })
 
 // === METHODS ===
+function openCreateModal() {
+  showCreateModal.value = true
+}
 
 async function createCurriculum() {
   const $q = useQuasar()
