@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-px-md">
+  <q-page class="q-px-sm">
     <!-- Header & Controls -->
     <div class="row justify-between q-px-lg q-mt-sm items-center">
       <div class="column">
@@ -21,7 +21,6 @@
           option-label="title"
           emit-value
           map-options
-          clearable
         />
 
         <!-- Level Filter -->
@@ -38,7 +37,6 @@
           option-label="title"
           emit-value
           map-options
-          clearable
         />
 
         <!-- New Subject Button -->
@@ -84,7 +82,7 @@
     </div>
 
     <!-- Subject Cards -->
-    <div v-else class="row q-col-gutter-md q-mx-md q-mt-xs">
+    <div v-else class="row q-col-gutter-md q-mx-sm q-mt-xs">
       <div
         v-for="subject in filteredSubjects"
         :key="subject.id"
@@ -156,7 +154,7 @@
               class="q-mt-sm"
               @update:model-value="onCurriculumChange"
               emit-value
-              map-options
+              map-optionsad
             />
 
             <!-- Level -->
@@ -337,7 +335,7 @@ async function createSubject() {
       title: newSubject.value.title.trim(),
       description: newSubject.value.description?.trim() || '',
       curriculumId: newSubject.value.curriculumId,
-      levelId: newSubject.value.levelId,
+      levelId: newSubject.value.levelId.id,
     }
 
     const created = await SubjectsService.createSubject(payload)
@@ -380,16 +378,3 @@ async function loadData() {
   }
 }
 </script>
-
-<style scoped>
-.subject-card {
-  transition: box-shadow 0.2s ease;
-  height: 100%;
-}
-.subject-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-.thick-border :deep(.q-field__control) {
-  border-width: 1px !important;
-}
-</style>
