@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh Lpr lff">
-    <q-header elevated class="bg-primary" >
+    <q-header elevated class="bg-primary">
       <q-toolbar>
         <q-btn
           flat
@@ -105,7 +105,6 @@
           </div>
         </div>
       </q-toolbar>
-
     </q-header>
 
     <q-drawer
@@ -121,8 +120,14 @@
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
     >
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
-        <q-list  class="">
-          <q-item clickable v-ripple v-for="(link,index) in linksList" v-bind:key="index" :to="link.link">
+        <q-list class="">
+          <q-item
+            clickable
+            v-ripple
+            v-for="(link, index) in linksList"
+            v-bind:key="index"
+            :to="link.link"
+          >
             <q-item-section avatar>
               <q-icon :name="link.icon" />
             </q-item-section>
@@ -138,7 +143,6 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-
   </q-layout>
 </template>
 
@@ -163,16 +167,26 @@ const linksList = [
     icon: 'mdi-crowd',
     link: '/students/channels',
   },
-   {
+  {
+    title: 'Curriculums',
+    icon: 'list',
+    link: '/students/curriculums',
+  },
+  {
+    title: 'Levels',
+    icon: 'list',
+    link: '/students/levels',
+  },
+  {
     title: 'Subjects',
     icon: 'list',
     link: '/students/subjects',
   },
-    {
+  {
     title: 'Settings',
     icon: 'mdi-cog',
     link: '/students/settings',
-  }
+  },
 ]
 import { ref } from 'vue'
 import PersonalChatDialog from 'src/components/PersonalChatDialog.vue'

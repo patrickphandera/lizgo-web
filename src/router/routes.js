@@ -22,7 +22,7 @@ const routes = [
     children: [{ path: '', component: () => import('pages/HomePage.vue') }],
   },
 
-    {
+  {
     path: '/students',
     component: () => import('layouts/ChannelLayout.vue'),
     children: [
@@ -30,7 +30,9 @@ const routes = [
       { path: 'channels/:id', component: () => import('pages/LessonPage.vue') },
       { path: 'lessons', component: () => import('pages/LessonsPage.vue') },
       { path: 'lessons/:id', component: () => import('pages/LessonPage.vue') },
-       { path: 'subjects', component: () => import('pages/SubjectsPage.vue') },
+      { path: 'subjects', component: () => import('pages/SubjectsPage.vue') },
+      { path: 'curriculums', component: () => import('pages/CurriculumsPage.vue') },
+      { path: 'levels', component: () => import('pages/LevelsPage.vue') },
     ],
   },
   {
