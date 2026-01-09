@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="row justify-center">
+  <q-page padding class="row justify-center items-center">
     <q-card class="q-pa-md column" style="max-width: 400px; width: 100%">
       <q-card-section>
         <div class="text-h6 text-center">Register</div>

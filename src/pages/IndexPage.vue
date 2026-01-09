@@ -1,116 +1,93 @@
 <template>
-  <q-page class="">
+  <q-page class="row items-center">
+    <!-- Hero Section -->
+    <div class="q-px-lg q-mx-auto  ">
+      <div class="row q-col-gutter-xl items-center">
+        <!-- Text Content -->
+        <div class="col-12 col-md-6">
+        <div
+  class="text-weight-bold text-black q-mb-sm text-h3  lt-md"
+>
+  Online Learning Platform for Your Syllabus
+</div>
 
-    <div class=" q-px-lg">
-      <q-card-section horizontal>
-        <q-card-section class="col-6 q-mt-xl ">
-          <!-- <div class="text-overline">Local Curricula</div> -->
-          <div class="text-h5   q-mb-xs">
-            <div class="text-h2 text-weight-bold q-mb-sm  shadow-0">
-              <span class="text-black">Great</span> learners <span class="text-black">learn</span> from the
-              #best.
-            </div>
+<div
+  class="text-weight-bold text-black q-mb-sm text-h2  gt-sm"
+>
+  Online Learning Platform for Your Syllabus
+</div>
+
+
+
+          <p class="text-body1 q-mt-md">
+            We have great courses taught by best teachers in Africa covering a variety of local
+            syllabuses.
+          </p>
+
+          <div class="lt-sm row items-top bg-grey-3">
+            <HomeLottie style="width: 100%; max-width: 400px" />
           </div>
-          <div class="text-body1 q-mt-xs q-pr-xl">
-            We have great courses taught by best teachers in Africa covering a varienty of local syllubus.
-          </div>
-          <div class="q-mt-sm q-mb-lg row q-gutter-md">
-            <router-link :to="`/register`" style="text-decoration: none; color: inherit;">
-              <q-btn unelevated rounded class="shadow-0  text-subtitle q-pa-md q-px-lg" icon-right="mdi-arrow-top-right"
-                color="primary " no-caps><span>Join
-                  for
-                  free</span></q-btn>
-            </router-link> <router-link :to="`/register`" style="text-decoration: none; color: inherit;">
-              <q-btn rounded unelevated class="shadow-0 text-black  text-subtitle q-pa-md q-px-lg"
-                icon-right="chevron_right" color="grey-3 " no-caps><span>Courses</span></q-btn>
+          <div class="q-mt-xs q-mb-lg row q-gutter-md flex-wrap">
+            <router-link :to="`/register`" style="text-decoration: none; color: inherit">
+              <q-btn
+
+                icon-right="mdi-arrow-top-right"
+                color="primary"
+                no-caps
+                label="Start for free"
+                class="text-subtitle2 q-py-sm q-px-md "
+              />
             </router-link>
           </div>
+        </div>
 
-          <!-- <div class="row q-gutter-md ">
-
-
-
-            <q-badge color="grey-4 q-pa-md shadow-0" text-color="black">
-              MSCE <q-icon name="mdi-check-circle" class="q-ml-sm"></q-icon>
-            </q-badge>
-            <q-badge color="grey-4  q-pa-md shadow-0 " text-color="black">
-              JCE <q-icon name="mdi-check-circle" class="q-ml-sm"></q-icon>
-            </q-badge>
-            <q-badge color="grey-4  q-pa-md shadow-0" text-color="black">
-              GSCE <q-icon name="mdi-check-circle" class="q-ml-sm"></q-icon>
-            </q-badge>
-
-            <q-badge color="grey-4  q-pa-md shadow-0" text-color="black">
-              PSLCE <q-icon name="mdi-check-circle" class="q-ml-sm"></q-icon>
-            </q-badge>
-
-
-          </div> -->
-
-        </q-card-section>
-
-        <q-card-section class="col-6 ">
-
-          <HomeLottie></HomeLottie>
-        </q-card-section>
-      </q-card-section>
+        <!-- Animation -->
+        <div class="col-12 col-md-6 flex justify-end gt-sm ">
+          <div class="bg-grey-3 bg-opacity-100 q-pa-xl rounded-borders">
+          <HomeLottie style="width: 100%; max-width: 400px" />
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="row q-mb-md q-px-lg q-mx-sm">
-      <div class="col-3">
-        <q-card class=" q-pa-xl q-ma-xs row justify-between">
-          Decipline <div>
-            <img src="/fire.png" alt="" height="20px">
-          </div>
-        </q-card>
-      </div>
-      <div class="col-3">
-        <q-card class=" q-pa-xl q-ma-xs row justify-between">
-          Hard working<div>
-            <img src="/fire.png" alt="" height="20px">
-          </div>
-        </q-card>
-      </div>
-      <div class="col-3">
-        <q-card class=" q-pa-xl q-ma-xs row justify-between ">
-          Result oriented<div>
-            <img src="/fire.png" alt="" height="20px">
-          </div>
-        </q-card>
-      </div>
-      <div class="col-3">
-        <q-card class=" q-pa-xl q-ma-xs">
-          <div class="row justify-between">
-            Innovative<div>
-              <img src="/fire.png" alt="" height="20px">
-            </div>
-          </div>
-        </q-card>
-      </div>
 
-    </div>
+
   </q-page>
 </template>
+
 <script>
-import { ref } from 'vue'
 import HomeLottie from 'components/HomeLottie.vue'
+
 export default {
   components: {
-    HomeLottie
+    HomeLottie,
   },
-  setup() {
+  data() {
     return {
-      slide: ref('first')
+        reasons: [
+      {
+        title: 'Local Syllabus Focus',
+        description: 'Aligned with MSCE, JSCE, PSLCE & more.'
+      },
+      {
+        title: 'Expert Teachers',
+        description: 'Top educators from across Africa.'
+      },
+      {
+        title: 'Affordable Access',
+        description: 'Quality learning at low cost.'
+      },
+      {
+        title: 'Interactive Lessons',
+        description: 'Engaging videos, quizzes & notes.'
+      }
+    ],
+      features: [
+        { title: 'MSCE' },
+        { title: 'JSCE' },
+        { title: 'GSCE' },
+        { title: 'PSLCE' },
+      ],
     }
-  }
+  },
 }
 </script>
-<style lang="sass" scoped>
-.custom-caption
-  text-align: center
-  padding: 12px
-  color: white
-  background-color: rgba(0, 0, 0, .3)
-.overlapping
-  border: 2px solid white
-  position: absolute
-</style>
