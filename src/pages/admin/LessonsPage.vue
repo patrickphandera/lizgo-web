@@ -14,7 +14,7 @@
           label="Levels"
           style="width: 100px"
         />
-        <AddLessonPage></AddLessonPage> <AddCredit></AddCredit>
+        <AddCredit></AddCredit>
       </div>
     </div>
     <div class="q-px-md q-mt-sm q-mb-sm">
@@ -84,11 +84,9 @@ import AddCredit from '../../components/AddCredit.vue'
 import LessonFirstCard from 'src/components/LessonFirstCard.vue'
 import lessonsService from 'src/services/lessons.service'
 import { ref } from 'vue'
-import AddLessonPage from '../../components/AddLessonPage.vue'
 export default {
   components: {
     LessonFirstCard,
-    AddLessonPage,
     AddCredit,
   },
   name: 'IndexPage',
