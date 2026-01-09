@@ -40,13 +40,7 @@
         />
 
         <!-- New Subject Button -->
-        <q-btn
-          class="text-capitalize"
-          color="primary"
-          @click="openNewSubject"
-          icon="add"
-          label="New Subject"
-        />
+
       </div>
     </div>
 
@@ -318,9 +312,6 @@ function onCurriculumChange() {
   newSubject.value.levelId = null
 }
 
-function openNewSubject() {
-  showCreateModal.value = true
-}
 
 async function createSubject() {
   const $q = useQuasar()

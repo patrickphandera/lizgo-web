@@ -1,72 +1,88 @@
 <template>
-  <q-page padding class="row justify-center items-center">
-    <q-card class="q-pa-md column" style="max-width: 400px; width: 100%">
+  <q-page padding class="row justify-center">
+    <q-card class="q-px-md column" style="max-width: 600px; width: 100%">
       <q-card-section>
-        <div class="text-h6 text-center">Register</div>
+        <div class="flex flex-center">
+          <img src="/login.png" alt="" style="width: 100px" />
+        </div>
+        <div class="text-h6 text-center">Register Account</div>
       </q-card-section>
 
       <q-card-section>
-        <q-form @submit.prevent="submitForm" ref="form">
-          <q-input
-            outlined
-            dense
-            v-model="form.name"
-            label="Full Name"
-            :rules="[(val) => !!val || 'Name is required']"
-            class="q-mb-sm"
-          />
-          <q-input
-            outlined
-            dense
-            v-model="form.email"
-            label="Email (Optional)"
-            type="email"
-            class="q-mb-sm"
-          />
-          <q-input
-            outlined
-            dense
-            v-model="form.phoneNumber"
-            label="Phone Number"
-            type="tel"
-            :rules="[(val) => !!val || 'Phone number is required']"
-            class="q-mb-sm"
-          />
-          <q-input
-            outlined
-            dense
-            v-model="form.password"
-            label="Password"
-            type="password"
-            :rules="[(val) => !!val || 'Password is required']"
-            class="q-mb-sm"
-          />
-          <q-input
-            outlined
-            dense
-            v-model="form.passwordConfirm"
-            label="Confirm Password"
-            type="password"
-            :rules="[(val) => val === form.password || 'Passwords must match']"
-            class="q-mb-sm"
-          />
+        <div class="row">
+          <div class="col-12">
+            <q-input
+              outlined
+              dense
+              v-model="form.name"
+              label="Full Name"
+              :rules="[(val) => !!val || 'Name is required']"
 
-          <q-btn
-            label="Register"
-            type="submit"
-            color="primary"
-            :loading="loading"
-            class="full-width"
-          />
-        </q-form>
+            />
+          </div>
+          <div class="col-12">
+            <q-input
+              outlined
+              dense
+              v-model="form.email"
+              label="Email (Optional)"
+              type="email"
+class="q-pb-md"
+            />
+          </div>
+          <div class="col-12">
+            <q-input
+              outlined
+              dense
+              v-model="form.phoneNumber"
+              label="Phone Number"
+              type="tel"
+              :rules="[(val) => !!val || 'Phone number is required']"
+
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              outlined
+              dense
+              v-model="form.password"
+              label="Password"
+              class="q-pr-md"
+              type="password"
+              :rules="[(val) => !!val || 'Password is required']"
+
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              outlined
+              dense
+              v-model="form.passwordConfirm"
+              label="Confirm Password"
+              type="password"
+              :rules="[(val) => val === form.password || 'Passwords must match']"
+
+            />
+          </div>
+          <div class="col-12">
+            <q-btn
+              label="Register"
+              type="submit"
+              color="primary"
+              :loading="loading"
+              class="full-width"
+              @click="submitForm()"
+            />
+          </div>
+        </div>
       </q-card-section>
 
-      <q-card-actions align="center">
+      <q-card-actions align="center" class="q-pb-md">
         <q-btn
           flat
           dense
           no-caps
-          class="text-none bg-grey-3"
+          class="text-none bg-grey-1"
           label="Already have an account? Login"
           @click="goToLogin"
         />

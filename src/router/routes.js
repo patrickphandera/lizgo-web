@@ -77,7 +77,7 @@ const routes = [
    children: [
       { path: 'channels', component: () => import('pages/teachers/ChannelsPage.vue') },
       { path: 'channels/:id', component: () => import('pages/teachers/LessonPage.vue') },
-      { path: 'lessons', component: () => import('pages/admin/LessonsPage.vue') },
+      { path: 'lessons', component: () => import('pages/teachers/LessonsPage.vue') },
       { path: 'lessons/:id', component: () => import('pages/teachers/LessonPage.vue') },
       { path: 'subjects', component: () => import('pages/teachers/SubjectsPage.vue') },
       { path: 'curriculums', component: () => import('pages/teachers/CurriculumsPage.vue') },

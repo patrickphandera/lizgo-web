@@ -12,7 +12,6 @@
                   <q-icon name="mdi-magnify"></q-icon>
                 </template>
               </q-input>
-              <ChannelCreateDialog v-model="showChannelDialog" @success="handleChannelCreated" />
             </div>
           </div>
         </div>
@@ -71,7 +70,6 @@
 </template>
 <script>
 import { ref } from 'vue'
-import ChannelCreateDialog from '../../components/ChannelCreateDialog.vue'
 import GroupConversationCreateDialog from '../../components/GroupConversationCreateDialog.vue'
 import { defineComponent } from 'vue'
 import ChannelCard from '../../components/ChannelCard.vue'
@@ -83,7 +81,6 @@ export default defineComponent({
   components: {
     GroupConversationCreateDialog,
     ChannelCard,
-    ChannelCreateDialog,
   },
   data() {
     const panel = ref('available')

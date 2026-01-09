@@ -29,14 +29,6 @@
 
         />
 
-        <q-btn
-          :disable="loading"
-          class="text-capitalize"
-          color="primary"
-          @click="openCreateModal"
-          icon="add"
-          label="New User"
-        />
       </div>
     </div>
 
@@ -258,9 +250,7 @@ function formatDate(iso) {
   return date.formatDate(iso, 'DD MMM YYYY')
 }
 
-function openCreateModal() {
-  showCreateModal.value = true
-}
+
 
 async function createUser() {
   const $q = useQuasar()

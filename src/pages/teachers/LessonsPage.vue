@@ -2,7 +2,7 @@
   <q-page class="">
     <div class="row justify-between q-px-lg q-mt-sm items-center">
       <div class="column">
-        <div class="text-weight-bold text-h6">Welcome to Lessons</div>
+        <div class="text-weight-bold text-h6">My Lessons</div>
         <div>We have a variety of lessons terrored to your currculum and levels of study.</div>
       </div>
       <div class="row q-gutter-md">

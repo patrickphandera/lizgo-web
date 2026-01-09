@@ -1,8 +1,12 @@
 <template>
-  <q-page padding class="row justify-center items-center">
-    <q-card class="q-pa-md column" style="max-width: 400px; width: 100%; height: 100%">
+  <q-page padding class="row justify-center">
+
+    <q-card class="q-pa-md column q-mt-md" style="max-width: 400px; width: 100%; height: 100%">
       <q-card-section>
-        <div class="text-h6 text-center">Login</div>
+        <div class="flex flex-center">
+          <img src="/Welcome-amico.png" alt="" style="width: 100px;">
+        </div>
+        <div class="text-h6 text-center">You're Welcome Back</div>
       </q-card-section>
 
       <q-card-section>
