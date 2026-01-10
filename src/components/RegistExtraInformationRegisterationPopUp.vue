@@ -69,8 +69,6 @@
               class="col"
             />
           </div>
-          <div class="text-body2 text-grey-7 q-mb-md">Your education level.</div>
-
           <q-option-group v-model="form.level" :options="levels" type="radio" />
 
           <!-- MSCE FORMS -->
