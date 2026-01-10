@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-px-sm">
+    <RegistExtraInformationRegisterationPopUp></RegistExtraInformationRegisterationPopUp>
     <div class="row justify-between q-px-md q-mt-sm items-center">
       <div class="column">
         <div class="text-weight-bold text-h6">Welcome to Lessons</div>
@@ -87,9 +88,11 @@ import LessonFirstCard from 'src/components/TeacherLessonFirstCard.vue'
 import lessonsService from 'src/services/lessons.service'
 import subjectsService from 'src/services/subjects.service'
 import levelsService from 'src/services/levels.service'
+import RegistExtraInformationRegisterationPopUp from '../components/RegistExtraInformationRegisterationPopUp.vue'
 export default {
   components: {
     LessonFirstCard,
+    RegistExtraInformationRegisterationPopUp,
     AddCredit,
   },
   name: 'IndexPage',
