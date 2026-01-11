@@ -172,7 +172,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch,onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import curriculumsService from '../services/curriculums.service.js'
 import levelsService from '../services/levels.service.js'
 import UserPersonalizationsService from '../services/user-personalizations.js'
@@ -181,7 +181,7 @@ const step = ref(1)
 const open = ref(false)
 
 const form = ref({
-  subjects: ['english'],
+  subjects: [],
   country: 'mw',
   curriculum: null,
   level: null,
@@ -199,7 +199,6 @@ const levels = ref([])
 const curriculumMap = ref(new Map())
 
 const subjects = ref([])
-
 
 const msceForms = [
   { label: 'Form 1', value: 'form1' },
@@ -314,7 +313,6 @@ const canProceed = computed(() => {
   return false
 })
 
-
 function nextStep() {
   if (step.value < 4) step.value++
 }
@@ -328,6 +326,7 @@ async function submit() {
     countryCode: form.value.country,
     curriculumId: form.value.curriculum,
     levelId: form.value.level,
+    subjects: form.value.subjects,
     ...(isMsceCurriculum.value && { msceForm: form.value.msceForm }),
   }
 
