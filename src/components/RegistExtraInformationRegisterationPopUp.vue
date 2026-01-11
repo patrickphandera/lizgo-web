@@ -15,17 +15,26 @@
       <div class="q-px-md">
         <!-- STEP 1: COUNTRY -->
         <div v-if="step === 1">
-          <div class="text-h6 text-weight-medium">Current Location</div>
-          <div class="row q-gutter-sm q-mb-md q-mt-sm">
+          <div class="row q-gutter-sm q-mb-md">
             <q-linear-progress
-              v-for="n in 3"
+              v-for="n in 4"
               :key="n"
               :value="step >= n ? 1 : 0"
               color="primary"
-              size="6px"
+              size="20px"
               rounded
               class="col"
-            />
+            >
+              <div
+                :class="
+                  step >= n
+                    ? `absolute-full flex flex-center text-caption text-white`
+                    : 'absolute-full flex flex-center  text-black text-caption'
+                "
+              >
+                {{ steps[n - 1] }} <q-icon v-if="step >= n" name="mdi-check-circle"></q-icon>
+                <q-icon v-else></q-icon></div
+            ></q-linear-progress>
           </div>
           <q-input dense outlined label="Search country" class="q-mb-md"></q-input>
           <q-option-group
@@ -38,34 +47,53 @@
 
         <!-- STEP 2: CURRICULUM -->
         <div v-if="step === 2">
-          <div class="text-h6 q-mb-xs text-h6 text-weight-medium">Current Curriculum</div>
-          <div class="row q-gutter-sm q-mb-md q-mt-sm">
+          <div class="row q-gutter-sm q-mb-md">
             <q-linear-progress
-              v-for="n in 3"
+              v-for="n in 4"
               :key="n"
+              size="20px"
               :value="step >= n ? 1 : 0"
               color="primary"
-              size="6px"
               rounded
               class="col"
-            />
+            >
+              <div
+                :class="
+                  step >= n
+                    ? `absolute-full flex flex-center text-caption text-white`
+                    : 'absolute-full flex flex-center  text-black text-caption'
+                "
+              >
+                {{ steps[n - 1] }} <q-icon v-if="step >= n" name="mdi-check-circle"></q-icon>
+                <q-icon v-else></q-icon>
+              </div>
+            </q-linear-progress>
           </div>
           <q-option-group v-model="form.curriculum" :options="curriculums" type="radio" />
         </div>
 
         <!-- STEP 3: LEVEL -->
         <div v-if="step === 3">
-          <div class="text-h6 text-weight-medium">Current Level</div>
-          <div class="row q-gutter-sm q-mb-md q-mt-sm">
+          <div class="row q-gutter-sm q-mb-md">
             <q-linear-progress
-              v-for="n in 3"
+              v-for="n in 4"
               :key="n"
               :value="step >= n ? 1 : 0"
               color="primary"
-              size="6px"
+              size="20px"
               rounded
               class="col"
-            />
+            >
+              <div
+                :class="
+                  step >= n
+                    ? `absolute-full flex flex-center text-caption text-white`
+                    : 'absolute-full flex flex-center  text-black text-caption'
+                "
+              >
+                {{ steps[n - 1] }} <q-icon v-if="step >= n" name="mdi-check-circle"></q-icon>
+                <q-icon v-else></q-icon></div
+            ></q-linear-progress>
           </div>
           <q-option-group v-model="form.level" :options="levels" type="radio" />
 
@@ -73,6 +101,35 @@
           <div v-if="isMsceCurriculum" class="q-mt-lg">
             <div class="text-subtitle1 q-mb-sm">Select MSCE Form</div>
             <q-option-group v-model="form.msceForm" :options="msceForms" type="radio" />
+          </div>
+        </div>
+
+        <div v-if="step === 4">
+          <div class="row q-gutter-sm q-mb-md">
+            <q-linear-progress
+              v-for="n in 4"
+              :key="n"
+              :value="step >= n ? 1 : 0"
+              color="primary"
+              size="20px"
+              rounded
+              class="col"
+            >
+              <div
+                :class="
+                  step >= n
+                    ? 'absolute-full flex flex-center text-caption text-white'
+                    : 'absolute-full flex flex-center text-caption text-black'
+                "
+              >
+                {{ steps[n - 1] }}
+                <q-icon v-if="step >= n" name="mdi-check-circle" />
+              </div>
+            </q-linear-progress>
+          </div>
+
+          <div class="scroll-section">
+            <q-option-group v-model="form.subjects" :options="subjects" type="checkbox" />
           </div>
         </div>
 
@@ -89,17 +146,18 @@
           />
 
           <q-btn
-            v-if="step === 3"
+            v-if="step === 4"
             no-caps
             label="Explore Lessons"
             color="primary"
+            icon-right="mdi-arrow-right"
             class="text-capitalize"
             :disable="!canProceed"
             @click="submit"
           />
 
           <q-btn
-            v-if="step < 3"
+            v-if="step < 4"
             no-caps
             class="text-capitalize text-body1"
             color="primary"
@@ -114,14 +172,16 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch,onMounted } from 'vue'
 import curriculumsService from '../services/curriculums.service.js'
 import levelsService from '../services/levels.service.js'
 import UserPersonalizationsService from '../services/user-personalizations.js'
+import subjectsService from '../services/subjects.service.js'
 const step = ref(1)
 const open = ref(false)
 
 const form = ref({
+  subjects: ['english'],
   country: 'mw',
   curriculum: null,
   level: null,
@@ -138,6 +198,9 @@ const curriculums = ref([])
 const levels = ref([])
 const curriculumMap = ref(new Map())
 
+const subjects = ref([])
+
+
 const msceForms = [
   { label: 'Form 1', value: 'form1' },
   { label: 'Form 2', value: 'form2' },
@@ -146,6 +209,7 @@ const msceForms = [
   { label: 'Other', value: 'other' },
 ]
 
+const steps = ref(['Current Location', 'Current Curriculum', 'Current Level', 'Select Subjects'])
 // Load ALL curriculums and filter by country on frontend
 async function loadCurriculums() {
   try {
@@ -196,11 +260,37 @@ async function loadLevels() {
     levels.value = []
   }
 }
+async function loadSubjects() {
+  if (!form.value.level) {
+    subjects.value = []
+    form.value.subjects = []
+    return
+  }
+
+  try {
+    const allSubjects = await subjectsService.list()
+    const filtered = allSubjects.filter((s) => s.levelId === form.value.level)
+
+    subjects.value = filtered.map((s) => ({
+      label: s.title,
+      value: s.id,
+    }))
+
+    // reset selection when level changes
+    form.value.subjects = []
+  } catch (err) {
+    console.error('Failed to load subjects:', err)
+    subjects.value = []
+  }
+}
 
 // Watchers
 watch(() => form.value.country, loadCurriculums, { immediate: true })
 watch(() => form.value.curriculum, loadLevels)
-watch(getByAUth())
+watch(() => form.value.level, loadSubjects)
+onMounted(() => {
+  getByAUth()
+})
 
 // Is selected curriculum titled "MSCE"?
 const isMsceCurriculum = computed(() => {
@@ -215,16 +305,18 @@ const canProceed = computed(() => {
   if (step.value === 2) return !!form.value.curriculum
   if (step.value === 3) {
     if (!form.value.level) return false
-    if (isMsceCurriculum.value) {
-      return !!form.value.msceForm
-    }
+    if (isMsceCurriculum.value) return !!form.value.msceForm
     return true
+  }
+  if (step.value === 4) {
+    return form.value.subjects.length > 0
   }
   return false
 })
 
+
 function nextStep() {
-  if (step.value < 3) step.value++
+  if (step.value < 4) step.value++
 }
 
 function prevStep() {
@@ -243,7 +335,7 @@ async function submit() {
   try {
     await UserPersonalizationsService.createUserPersonalization(payload)
     alert('Your content persolization saved.This page will reload to reflect your preferences.')
-   location.reload();
+    location.reload()
   } catch (error) {
     alert(error)
   }
@@ -253,17 +345,17 @@ async function submit() {
 async function getByAUth() {
   try {
     await UserPersonalizationsService.exists()
-    open.value=false
+    open.value = false
   } catch (error) {
-    open.value=true
+    open.value = true
     console.log('not loaded', error)
   }
 }
 </script>
 
 <style scoped>
-.option-scroll {
-  max-height: 240px;
+.scroll-section {
+  max-height: 250px;
   overflow-y: auto;
 }
 </style>
