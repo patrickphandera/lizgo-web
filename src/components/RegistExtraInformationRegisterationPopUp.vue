@@ -6,9 +6,10 @@
         <q-space />
       </q-card-section>
 
-
       <q-card-section>
-        Help us tailor the content to you by sharing a few details about your location, syllabus, and current level. This will ensure you see the most relevant lessons and resources from the start.
+        Help us tailor the content to you by sharing a few details about your location, syllabus,
+        and current level. This will ensure you see the most relevant lessons and resources from the
+        start.
       </q-card-section>
 
       <div class="q-px-md">
@@ -118,7 +119,7 @@ import curriculumsService from '../services/curriculums.service.js'
 import levelsService from '../services/levels.service.js'
 import UserPersonalizationsService from '../services/user-personalizations.js'
 const step = ref(1)
-const open = ref(true)
+const open = ref(false)
 
 const form = ref({
   country: 'mw',
@@ -150,11 +151,11 @@ async function loadCurriculums() {
   try {
     const all = await curriculumsService.list() // returns array of curriculum objects
     const filtered = all.filter(
-      item => (item.country_code || '').toLowerCase() === form.value.country
+      (item) => (item.country_code || '').toLowerCase() === form.value.country,
     )
 
     const map = new Map()
-    curriculums.value = filtered.map(item => {
+    curriculums.value = filtered.map((item) => {
       map.set(item.id, item)
       return { label: item.title, value: item.id }
     })
@@ -181,13 +182,11 @@ async function loadLevels() {
 
   try {
     const allLevels = await levelsService.list() // get all levels
-    const filtered = allLevels.filter(
-      item => item.curriculumId === form.value.curriculum
-    )
+    const filtered = allLevels.filter((item) => item.curriculumId === form.value.curriculum)
 
-    levels.value = filtered.map(item => ({
+    levels.value = filtered.map((item) => ({
       label: item.title,
-      value: item.id
+      value: item.id,
     }))
 
     form.value.level = null
@@ -201,6 +200,7 @@ async function loadLevels() {
 // Watchers
 watch(() => form.value.country, loadCurriculums, { immediate: true })
 watch(() => form.value.curriculum, loadLevels)
+watch(getByAUth())
 
 // Is selected curriculum titled "MSCE"?
 const isMsceCurriculum = computed(() => {
@@ -236,17 +236,28 @@ async function submit() {
     countryCode: form.value.country,
     curriculumId: form.value.curriculum,
     levelId: form.value.level,
-    ...(isMsceCurriculum.value && { msceForm: form.value.msceForm })
+    ...(isMsceCurriculum.value && { msceForm: form.value.msceForm }),
   }
 
   console.log('Final personalization data:', payload)
-  try{
-  await UserPersonalizationsService.createUserPersonalization(payload)
-  alert('User content persolization saved')
-  }catch(error){
+  try {
+    await UserPersonalizationsService.createUserPersonalization(payload)
+    alert('Your content persolization saved.This page will reload to reflect your preferences.')
+   location.reload();
+  } catch (error) {
     alert(error)
   }
   open.value = false
+}
+
+async function getByAUth() {
+  try {
+    await UserPersonalizationsService.exists()
+    open.value=false
+  } catch (error) {
+    open.value=true
+    console.log('not loaded', error)
+  }
 }
 </script>
 

@@ -10,6 +10,18 @@ class BaseDbService {
     this.cacheTimeout = 5 * 60 * 1000 // 5 minutes
   }
 
+  // Check if record exists by authId
+async existsByAuthId() {
+  try {
+    const result = await this.find({ useCache: false })
+    return Array.isArray(result) && result.length > 0
+  } catch (error) {
+    console.error(`Failed to check existence by authId in ${this.endpoint}:`, error)
+    throw error
+  }
+}
+
+
   // Get all records with filtering, sorting, and pagination
   async getAll(params = {}) {
     const { useCache = true, ...queryParams } = params

@@ -12,6 +12,15 @@ class UserPersonalizationsService extends BaseDbService {
   async get(id) {
     return this.getById(id)
   }
+  async exists(){
+    try {
+      const response = await this.rest.get(`${this.endpoint}/me/exists`)
+      return response.data || response
+    } catch (error) {
+      console.error(`Failed to fetch user-persolization`, error)
+      throw error
+    }
+  }
 
   // Get userPersolization by ID with full details
   async getUserPersonalizationDetails(id) {
