@@ -72,7 +72,7 @@ export default {
           this.phoneNumber = this.username.trim()
           await this.authStore.login({phoneNumber: this.phoneNumber, password: this.password})
           Notify.create('Login successful..', 'positive')
-          this.$router.push('/quizzes') // redirect after login
+          this.$router.push('/students/lessons') // redirect after login
         } else {
           this.email = this.username.trim()
           await this.authStore.login({email: this.email, password: this.password})
@@ -85,6 +85,10 @@ export default {
       } finally {
         this.loading = false
       }
+
+
+
+
     },
     goToRegister() {
       this.$router.push('/register')

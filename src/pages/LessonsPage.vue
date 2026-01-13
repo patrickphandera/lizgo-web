@@ -7,11 +7,11 @@
         <div>We have a variety of lessons tailored to your curriculum and levels of study.</div>
       </div>
 
-<div class="row items-center justify-between">
-  <div class="lt-md">
-    <AddCredit />
-  </div>
-</div>
+      <div class="row items-center justify-between">
+        <div class="lt-md">
+          <AddCredit />
+        </div>
+      </div>
 
       <div class="row q-gutter-md items-center gt-sm">
         <!-- Level Filter -->
@@ -118,7 +118,7 @@ export default {
       this.loading = true
       try {
         const [lessons, subjects, levels] = await Promise.all([
-          lessonsService.getAll(),
+          lessonsService.getStudentPersonalizedLessons(),
           subjectsService.getAll(),
           levelsService.getAll(),
         ])

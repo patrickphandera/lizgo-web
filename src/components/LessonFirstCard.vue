@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 col-sm-6 col-md-4">
-    <q-card clickable class="q-my-sm shadow-1">
+    <q-card clickable class="q-my-sm shadow-0" bordered>
       <router-link
         :to="`/students/lessons/${lesson?.id}`"
         style="text-decoration: none; color: inherit"

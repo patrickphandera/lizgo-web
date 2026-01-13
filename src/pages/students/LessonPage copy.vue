@@ -3,15 +3,15 @@
   <q-page class="q-mx-md q-mt-md">
     <div class="text-h6 flex justify-between">
       <div class="flex">
-        <router-link :to="`/students/lessons`" style="text-decoration: none; color: inherit">
+        <router-link :to="`/lessons`" style="text-decoration: none; color: inherit">
+          <q-card style="width: 60px" class="shadow-0">
             <q-btn
-            size="sm"
-              class="text-capitalize shadow-0 row"
+              icon="arrow_back"
+              class="text-capitalize shadow-0"
               @click="$router.push({ path: '/lessons' })"
             >
-            <q-icon  size="24px" name="mdi-keyboard-backspace"></q-icon>  <span class="text-body1"></span>
             </q-btn>
-
+          </q-card>
         </router-link>
         <span class="q-mx-md text-center text-body1">{{ lesson.title }}</span>
       </div>
@@ -19,51 +19,68 @@
         <AddCredit></AddCredit>
       </div>
     </div>
-    <div class="row q-my-sm">
+    <div class="row q-my-md">
       <div class="col-10 q-pr-md">
-        <q-card v-if="!isNextBtnActive" class="my-card video row justify-center">
-          <img src="/premium.jpeg" class="video"
-        /></q-card>
-        <div v-else>
-          <LearningSection
-            v-if="!isLessonComplete && currentSection"
-            :section="currentSection"
-            :title="lesson.title"
-          >
-          </LearningSection>
-
-          <q-card
-            v-else-if="isLessonComplete"
-            class="q-pa-xl row justify-center items-center text-center video"
-          >
-            <div>
-              <q-icon name="check_circle" color="primary" size="64px" />
-              <div class="text-h6 q-mt-md">Lesson completed 🎉</div>
-              <div class="text-caption">You’ve finished all sections</div>
-            </div>
-          </q-card>
-        </div>
-        <div class="row justify-between q-mt-sm ">
+        <LearningSection
+          v-if="!isLessonComplete && currentSection"
+          :section="currentSection"
+          :title="lesson.title"
+        >
+        </LearningSection>
+        <q-card
+          v-else-if="isLessonComplete"
+          class="q-pa-xl row justify-center items-center text-center video"
+        >
           <div>
-            <LessonCommentModal :conversationId="lesson.conversationId"></LessonCommentModal>
+            <q-icon name="check_circle" color="primary" size="64px" />
+            <div class="text-h6 q-mt-md">Lesson completed 🎉</div>
+            <div class="text-caption">You’ve finished all sections</div>
           </div>
-          <div>
-            <q-btn
-              icon="mdi-skip-previous"
-              :disable="currentSectionIndex === 0"
-              @click="previousSection"
-            />
+        </q-card>
 
-            <q-btn
-              v-if="isNextBtnActive"
-              icon="mdi-skip-next"
-              :disable="isLessonComplete"
-              @click="nextSection"
-            />
-            <q-btn v-if="!isNextBtnActive" icon="mdi-skip-next" disable />
-          </div>
+        <div class="row justify-end q-mt-sm">
+          <q-btn
+            icon="mdi-skip-previous"
+            :disable="currentSectionIndex === 0"
+            @click="previousSection"
+          />
+
+          <q-btn icon="mdi-skip-next" :disable="isLessonComplete" @click="nextSection" />
         </div>
+        <q-card bordered flat class="q-mt-md">
+          <q-card-section class="text-h6">
+            <div>Comments</div>
+            <q-item>
+              <q-item-section avatar>
+                <q-avatar>
+                  <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+                </q-avatar>
+              </q-item-section>
 
+              <q-item-section>
+                <q-input outlined v-model="text" class="q-mt-sm" label="New message" dense />
+              </q-item-section>
+            </q-item>
+            <q-item v-for="i in [1, 2]" v-bind:key="i">
+              <q-item-section avatar>
+                <q-avatar>
+                  <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+                </q-avatar>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label caption>@PatrickPhandera</q-item-label>
+                <q-item-label class="text-caption">
+                  Maize is a crucial crop in Malawi, serving as both a staple food and a key driver
+                  of the national economy. Its production supports the livelihoods of millions of
+                  smallholder farmers and contributes significantly to food security. Understanding
+                  the importance of maize helps in promoting sustainable agricultural practices and
+                  shaping policies that strengthen Malawi’s agricultural sector.</q-item-label
+                >
+              </q-item-section>
+            </q-item>
+          </q-card-section>
+        </q-card>
       </div>
 
       <q-card class="col-2 q-px-md shadow-1">
@@ -92,21 +109,19 @@
   </q-page>
 </template>
 <script>
-import { Notify } from 'quasar'
-import LearningSection from '../../components/LearningSection.vue'
+import LearningSection from '../components/LearningSection.vue'
 import { defineComponent } from 'vue'
-import LessonsService from '../../services/lessons.service'
-import AddCredit from '../../components/AddCredit.vue'
-import LessonCommentModal from '../../components/LessonCommentModal.vue'
+import LessonsService from '../services/lessons.service'
+import AddCredit from '../components/AddCredit.vue'
+import { Notify } from 'quasar'
 export default defineComponent({
   name: 'IndexPage',
-  components: { LearningSection, AddCredit,LessonCommentModal },
+  components: { LearningSection, AddCredit },
 
   data() {
     return {
       checkingOUt: false,
       text: '',
-      isNextBtnActive: true,
       completedSections: new Set(
         JSON.parse(localStorage.getItem(`lesson-${this.$route.params.id}-progress`) || '[]'),
       ),
@@ -138,13 +153,8 @@ export default defineComponent({
 
       this.lesson = lesson
       this.currentSectionIndex = 0
-      console.log('Loaded lesson:', lesson)
       await this.loadSection()
     } catch (err) {
-      Notify.create({
-        type: 'negative',
-        message: `Error fetching lesson: ${err}`,
-      })
       console.error('Error fetching lesson:', err)
     }
   },
@@ -188,9 +198,8 @@ export default defineComponent({
           ...section,
           ...sectionDetails,
         }
-        this.isNextBtnActive = true
       } catch (err) {
-        this.isNextBtnActive = false
+        this.isLessonComplete = false
         Notify.create({
           type: 'negative',
           message: `${err}`,
@@ -226,6 +235,5 @@ export default defineComponent({
 <style scoped>
 .video {
   height: 450px;
-  width: auto;
 }
 </style>

@@ -7,6 +7,7 @@ class LessonsService extends BaseDbService {
     super('/lessons')
   }
 
+
   // Get lessons with sections populated
   async getLessonsWithSections(params = {}) {
     try {
@@ -89,6 +90,12 @@ class LessonsService extends BaseDbService {
   }
 
   // Get lessons by author
+
+    async getStudentPersonalizedLessons() {
+    const response = await this.rest.get(`${this.endpoint}/students/me`)
+    console.log(response.data)
+    return response.data || response
+  }
   async getLessonsByAuthor(authorId) {
     const response = await this.rest.get(`${this.endpoint}/author/${authorId}`)
     console.log(response.data)
