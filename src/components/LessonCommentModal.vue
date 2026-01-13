@@ -154,7 +154,8 @@ const sendMessage = () => {
   socketService.sendMessage(props.conversationId, content, (response) => {
     sending.value = false
     if (response?.success) {
-      console.log(response)
+      console.log(response.message)
+      messages.value.push(response.message)
       newMessage.value = ''
     } else {
       console.log(response)
