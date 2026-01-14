@@ -43,7 +43,7 @@
 
             <q-item-section side>
               <q-item-label caption class="text-caption text-grey-9">
-                {{ formatDate(message.createdAt) }}
+                {{ message.timeAgo }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -97,7 +97,7 @@
 <script setup>
 import axios from 'axios'
 import { ref, onMounted, onUnmounted } from 'vue'
-import { Notify, date } from 'quasar'
+import { Notify } from 'quasar'
 import socketService from '../services/socket.service'
 import conversationsService from 'src/services/conversations.service'
 import { useAuthStore } from '../stores/auth'
@@ -119,9 +119,6 @@ const sending = ref(false)
 const socketConnected = ref(false)
 
 // ─── Helpers ────────────────────────────────────────
-const formatDate = (dateStr) => {
-  return date.formatDate(dateStr, 'MMM DD, YYYY HH:mm')
-}
 
 // ─── Load Messages ──────────────────────────────────
 const loadMessages = async () => {
@@ -136,7 +133,8 @@ const loadMessages = async () => {
       },
     )
 
-    messages.value = res.data.messages || []
+    messages.value = res.data.messages.reverse() || []
+
   } catch (err) {
     console.error('Failed to load messages:', err)
     Notify.create({ message: 'Failed to load comments', color: 'negative' })
