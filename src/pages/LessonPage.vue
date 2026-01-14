@@ -98,6 +98,7 @@ import { defineComponent } from 'vue'
 import LessonsService from '../services/lessons.service'
 import AddCredit from '../components/AddCredit.vue'
 import LessonCommentModal from '../components/LessonCommentModal.vue'
+import userLessonsService from 'src/services/user.lessons.service'
 export default defineComponent({
   name: 'IndexPage',
   components: { LearningSection, AddCredit,LessonCommentModal },
@@ -134,6 +135,8 @@ export default defineComponent({
     const lessonId = this.$route.params.id
 
     try {
+      const userLesson = await userLessonsService.create({lessonId})
+      console.log({userLesson})
       const lesson = await LessonsService.getLessonDetails(lessonId)
 
       this.lesson = lesson

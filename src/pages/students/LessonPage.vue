@@ -4,14 +4,14 @@
     <div class="text-h6 flex justify-between">
       <div class="flex">
         <router-link :to="`/students/lessons`" style="text-decoration: none; color: inherit">
-            <q-btn
+          <q-btn
             size="sm"
-              class="text-capitalize shadow-0 row"
-              @click="$router.push({ path: '/lessons' })"
-            >
-            <q-icon  size="24px" name="mdi-keyboard-backspace"></q-icon>  <span class="text-body1"></span>
-            </q-btn>
-
+            class="text-capitalize shadow-0 row"
+            @click="$router.push({ path: '/lessons' })"
+          >
+            <q-icon size="24px" name="mdi-keyboard-backspace"></q-icon>
+            <span class="text-body1"></span>
+          </q-btn>
         </router-link>
         <span class="q-mx-md text-center text-body1">{{ lesson.title }}</span>
       </div>
@@ -43,7 +43,7 @@
             </div>
           </q-card>
         </div>
-        <div class="row justify-between q-mt-sm ">
+        <div class="row justify-between q-mt-sm">
           <div>
             <LessonCommentModal :conversationId="lesson.conversationId"></LessonCommentModal>
           </div>
@@ -63,7 +63,6 @@
             <q-btn v-if="!isNextBtnActive" icon="mdi-skip-next" disable />
           </div>
         </div>
-
       </div>
 
       <q-card class="col-2 q-px-md shadow-1">
@@ -96,11 +95,12 @@ import { Notify } from 'quasar'
 import LearningSection from '../../components/LearningSection.vue'
 import { defineComponent } from 'vue'
 import LessonsService from '../../services/lessons.service'
+import userLessonsService from '../../services/user.lessons.service'
 import AddCredit from '../../components/AddCredit.vue'
 import LessonCommentModal from '../../components/LessonCommentModal.vue'
 export default defineComponent({
   name: 'IndexPage',
-  components: { LearningSection, AddCredit,LessonCommentModal },
+  components: { LearningSection, AddCredit, LessonCommentModal },
 
   data() {
     return {
@@ -134,6 +134,8 @@ export default defineComponent({
     const lessonId = this.$route.params.id
 
     try {
+      const userLesson = await userLessonsService.create({ lessonId })
+      console.log({ userLesson })
       const lesson = await LessonsService.getLessonDetails(lessonId)
 
       this.lesson = lesson
