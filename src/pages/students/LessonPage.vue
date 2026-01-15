@@ -206,7 +206,7 @@ export default defineComponent({
 
       const currentUserLesson=this.currentSection.userLesson._id.toString()
 
-     const userLesson= await userLessonsService.update(currentUserLesson,{sections:this.currentSection})
+     const userLesson= await userLessonsService.update(currentUserLesson,{sections:[this.currentSection]})
       this.completedSections.add(this.lesson.sections[this.currentSectionIndex].id)
 
       this.currentSectionIndex++
