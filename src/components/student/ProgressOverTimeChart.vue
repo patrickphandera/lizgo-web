@@ -7,7 +7,8 @@
 <script>
 // Only needed if you're using npm-installed Chart.js
 // If using CDN, remove this import — `Chart` is global
-import { Chart } from 'chart.js'
+import Chart from 'chart.js/auto'
+
 
 export default {
   name: 'ProgressOverTimeChart',

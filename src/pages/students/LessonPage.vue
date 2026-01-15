@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/valid-v-for -->
 <template>
   <q-page class="q-mx-md q-mt-md">
+    {{ currentSection }}
     <div class="text-h6 flex justify-between">
       <div class="flex">
         <router-link :to="`/students/lessons`" style="text-decoration: none; color: inherit">
@@ -113,6 +114,7 @@ export default defineComponent({
 
       lesson: {
         title: '',
+        userLesson:'',
         sections: [],
       },
       currentSection: null,
@@ -201,20 +203,24 @@ export default defineComponent({
       }
     },
     async nextSection() {
-      // mark current as completed
+
+      const currentUserLesson=this.currentSection.userLesson._id.toString()
+
+     const userLesson= await userLessonsService.update(currentUserLesson,{sections:this.currentSection})
       this.completedSections.add(this.lesson.sections[this.currentSectionIndex].id)
 
-      // Move to next section
       this.currentSectionIndex++
 
-      // Check if we've completed all sections
+
       if (this.currentSectionIndex >= this.lesson.sections.length) {
         this.currentSection = null
         return
       }
 
-      // Load the next section
+
       await this.loadSection()
+
+     console.log('userLesson',userLesson)
     },
     async previousSection() {
       if (this.currentSectionIndex === 0) return
