@@ -1,7 +1,6 @@
 <!-- eslint-disable vue/valid-v-for -->
 <template>
   <q-page class="q-mx-md q-mt-md">
-    {{ currentSection }}
     <div class="text-h6 flex justify-between">
       <div class="flex">
         <router-link :to="`/students/lessons`" style="text-decoration: none; color: inherit">
