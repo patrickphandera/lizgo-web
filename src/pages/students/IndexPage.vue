@@ -25,7 +25,7 @@
             >
               <q-icon name="mdi-check-circle"></q-icon>{{ section }}</q-chip
             >
-             <q-chip
+            <q-chip
               color="grey-2"
               dense
               class="text-caption"
@@ -52,7 +52,7 @@
       <div class="col-12 col-md-6">
         <q-card>
           <q-card-section>
-            <div class="text-h6">Soil fertility and management</div>
+            <div class="text-h6">1Soil fertility and management</div>
             <div class="">Soil fertility and management</div>
           </q-card-section>
           <q-separator></q-separator>
@@ -60,7 +60,7 @@
         </q-card>
       </div>
       <div class="col-12 col-md-6">
-        <RecentLesson></RecentLesson>
+        <RecentLesson :lessons="{userLesson1}"></RecentLesson>
       </div>
       <div class="col-12 col-md-6">
         <q-card>
@@ -92,6 +92,7 @@ export default {
       unCoveredLessons: [],
       coveredLessons: [],
       userLesson: {},
+      userLesson1: {},
       weeklyScores: [
         { date: '2026-01-01', avgScore: 70 },
         { date: '2026-01-08', avgScore: 75 },
@@ -114,17 +115,20 @@ export default {
   },
   methods: {
     async loadData() {
+      let latestUserLesson1 = await userLessonsService.get('me/all')
+      this.userLesson1 = latestUserLesson1
+
       let latestUserLesson = await userLessonsService.get('me/latest')
       this.userLesson = latestUserLesson
 
-       this.coveredLessons = latestUserLesson.sections.map(s => s.title);
+      this.coveredLessons = latestUserLesson.sections.map((s) => s.title)
 
-    // Titles of all sections in the lesson
-    const allLessonTitles = latestUserLesson.lessonId.sections.map(s => s.title);
+      // Titles of all sections in the lesson
+      const allLessonTitles = latestUserLesson.lessonId.sections.map((s) => s.title)
 
-     this.unCoveredLessons = allLessonTitles.filter(
-      title => !this.coveredLessons.includes(title)
-    );
+      this.unCoveredLessons = allLessonTitles.filter(
+        (title) => !this.coveredLessons.includes(title),
+      )
     },
   },
 }
