@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <!-- {{ channels }} -->
+    {{ channels }}
     <q-list class="row border">
       <q-list class="col-12 q-pt-sm" bordered>
         <div class="row justify-between q-px-md">
@@ -115,6 +115,7 @@ export default defineComponent({
     async handleChannelCreated() {},
     async loadData() {
       const channels = await channelsService.list()
+      console.log(channels)
 
       channels.map((channel) => {
         channel.toggle = false
