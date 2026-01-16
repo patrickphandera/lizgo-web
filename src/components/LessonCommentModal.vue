@@ -153,7 +153,7 @@ const sendMessage = () => {
     sending.value = false
     if (response?.success) {
       console.log(response.message)
-      messages.value.push(response.message)
+      // messages.value.push(response.message)
       newMessage.value = ''
     } else {
       console.log(response)
