@@ -28,7 +28,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import LessonFirstCard from 'src/components/LessonFirstCard.vue'
+import LessonFirstCard from '../components/LessonFirstCard.vue'
 export default defineComponent({
   components: {
     LessonFirstCard,

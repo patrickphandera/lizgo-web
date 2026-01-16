@@ -1,4 +1,4 @@
-// src/services/socket.service.js
+// ../services/socket.service.js
 import { io } from 'socket.io-client'
 
 class SocketService {

@@ -93,12 +93,12 @@
 </template>
 <script>
 import { Notify } from 'quasar'
-import LearningSection from '../components/LearningSection.vue'
+import LearningSection from '../../components/LearningSection.vue'
 import { defineComponent } from 'vue'
-import LessonsService from '../services/lessons.service'
-import AddCredit from '../components/AddCredit.vue'
-import LessonCommentModal from '../components/LessonCommentModal.vue'
-import userLessonsService from 'src/services/user.lessons.service'
+import LessonsService from '../../services/lessons.service'
+import AddCredit from '../../components/AddCredit.vue'
+import LessonCommentModal from '../../components/LessonCommentModal.vue'
+import userLessonsService from '../../services/user.lessons.service'
 export default defineComponent({
   name: 'IndexPage',
   components: { LearningSection, AddCredit,LessonCommentModal },

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import { useAuthStore } from 'src/stores/auth'
+  import { useAuthStore } from './stores/auth'
 import { defineComponent } from 'vue'
 
 export default defineComponent({

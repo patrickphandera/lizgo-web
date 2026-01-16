@@ -40,9 +40,9 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import MessagesService from 'src/services/messages.service'
-import SocketService from 'src/services/socket.service'
-import { useAuthStore } from 'src/stores/auth'
+import MessagesService from '../services/messages.service'
+import SocketService from '../services/socket.service'
+import { useAuthStore } from '../stores/auth'
 
 const props = defineProps({
   conversationId: {

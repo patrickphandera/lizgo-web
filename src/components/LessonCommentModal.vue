@@ -99,7 +99,7 @@ import axios from 'axios'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { Notify } from 'quasar'
 import socketService from '../services/socket.service'
-import conversationsService from 'src/services/conversations.service'
+import conversationsService from '../services/conversations.service'
 import { useAuthStore } from '../stores/auth'
 
 const props = defineProps({

@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import curriculumsService from 'src/services/curriculums.service.js'
+import curriculumsService from '../services/curriculums.service.js'
 
 export default {
   name: 'CurriculumAdminPage',

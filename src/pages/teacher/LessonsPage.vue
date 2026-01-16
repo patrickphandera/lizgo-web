@@ -25,7 +25,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import LessonsTable from 'src/components/teacher/LessonsTable.vue'
+import LessonsTable from '../components/teacher/LessonsTable.vue'
 export default defineComponent({
   components: {
     LessonsTable

@@ -141,8 +141,8 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import TopicsService from 'src/services/topics.service.js'
-import SubjectsService from 'src/services/subjects.service.js'
+import TopicsService from '../../services/topics.service.js'
+import SubjectsService from '../../services/subjects.service.js'
 
 // === FILTERS ===
 const selectedSubjectId = ref(null)

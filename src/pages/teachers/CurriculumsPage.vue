@@ -124,7 +124,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import CurriculumsService from 'src/services/curriculums.service.js'
+import CurriculumsService from '../../services/curriculums.service.js'
 
 // === DATA ===
 const curriculums = ref([])

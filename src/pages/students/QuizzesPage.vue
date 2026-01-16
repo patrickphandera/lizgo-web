@@ -79,7 +79,7 @@
 
 <script>
 import { defineComponent, ref, computed, onMounted } from 'vue'
-import quizzesService from 'src/services/quizzes.service.js'
+import quizzesService from '../services/quizzes.service.js'
 
 export default defineComponent({
   name: 'QuizzesAdminPage',

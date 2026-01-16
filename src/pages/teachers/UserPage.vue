@@ -53,7 +53,7 @@ import { useRoute } from 'vue-router'
 import TeachersLessons from '../../components/teacher/TeachersLessons.vue'
 
 import { ref } from 'vue'
-import usersService from 'src/services/users.service'
+import usersService from '../services/users.service'
 export default {
   components: { TeachersLessons },
   data() {

@@ -188,7 +188,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { date } from 'quasar'
-import UsersService from 'src/services/users.service.js'
+import UsersService from '../../services/users.service.js'
 
 // === FILTERS ===
 const selectedRole = ref(null)

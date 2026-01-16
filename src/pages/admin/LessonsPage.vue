@@ -81,8 +81,8 @@
 
 <script>
 import AddCredit from '../../components/AddCredit.vue'
-import LessonFirstCard from 'src/components/LessonFirstCard.vue'
-import lessonsService from 'src/services/lessons.service'
+import LessonFirstCard from '../../components/LessonFirstCard.vue'
+import lessonsService from '../../services/lessons.service'
 import { ref } from 'vue'
 export default {
   components: {

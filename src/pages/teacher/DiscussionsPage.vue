@@ -31,7 +31,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import DiscussionCard from 'src/components/DiscussionCard.vue'
+import DiscussionCard from '../components/DiscussionCard.vue'
 
 import { ref } from 'vue'
 export default defineComponent({

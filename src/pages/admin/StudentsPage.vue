@@ -191,9 +191,9 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import SubjectsService from 'src/services/subjects.service.js'
-import CurriculumsService from 'src/services/curriculums.service.js'
-import LevelsService from 'src/services/levels.service.js'
+import SubjectsService from '../../services/subjects.service.js'
+import CurriculumsService from '../../services/curriculums.service.js'
+import LevelsService from '../../services/levels.service.js'
 
 // === FILTERS ===
 const selectedCurriculumId = ref(null)

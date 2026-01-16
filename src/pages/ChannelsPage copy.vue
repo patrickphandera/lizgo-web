@@ -72,8 +72,8 @@ import ChannelCreateDialog from '../components/ChannelCreateDialog.vue'
 import { defineComponent } from 'vue'
 import ChannelCard from '../components/ChannelCard.vue'
 // import CreateQuizModal from '../components/CreateQuizModal.vue'
-import quizzesService from 'src/services/quizzes.service'
-import channelsService from 'src/services/channels.service'
+import quizzesService from '../services/quizzes.service'
+import channelsService from '../services/channels.service'
 export default defineComponent({
   name: 'ChannelsPage',
   components: {

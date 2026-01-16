@@ -93,7 +93,7 @@
 <script>
 import { defineComponent } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-// import AddLessonPage from 'src/components/AddLessonPage.vue'
+// import AddLessonPage from '../components/AddLessonPage.vue'
 
 const linksList = [
   {

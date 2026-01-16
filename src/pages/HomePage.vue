@@ -31,10 +31,10 @@
 
 <script>
 import { defineComponent } from 'vue'
-import LessonFirstCard from 'src/components/LessonRecentCard.vue'
+import LessonFirstCard from '../components/LessonRecentCard.vue'
 // import AddLessonPage from '../components/AddLessonPage.vue'
 import AveragePerformance from '../components/AveragePerformance.vue'
-import lessonsService from 'src/services/lessons.service';
+import lessonsService from '../services/lessons.service';
 import ViewedLessons from '../components/ViewedLessons.vue'
 
 export default defineComponent({

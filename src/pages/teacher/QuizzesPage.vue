@@ -31,10 +31,10 @@
 
 <script>
 import { defineComponent } from 'vue'
-import UnAttemptedQuizCard from 'src/components/UnAttemptedQuizCard.vue'
+import UnAttemptedQuizCard from '../components/UnAttemptedQuizCard.vue'
 
 import { ref } from 'vue'
-import CompletedQuizCard from 'src/components/CompletedQuizCard.vue';
+import CompletedQuizCard from '../components/CompletedQuizCard.vue';
 export default defineComponent({
   name: 'QuizzesPage',
   components: {

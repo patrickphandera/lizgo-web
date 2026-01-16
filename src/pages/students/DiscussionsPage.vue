@@ -77,7 +77,7 @@
 
 <script>
 import { defineComponent, ref, computed, onMounted } from 'vue'
-import discussionsService from 'src/services/discussions.service.js'
+import discussionsService from '../services/discussions.service.js'
 
 export default defineComponent({
   name: 'DiscussionsAdminPage',

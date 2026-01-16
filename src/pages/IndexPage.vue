@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import HomeLottie from 'components/HomeLottie.vue'
+import HomeLottie from '../components/HomeLottie.vue'
 
 export default {
   components: {

@@ -76,11 +76,11 @@
   </q-page>
 </template>
 <script>
-import SubjectScoresBarChart from 'components/student/SubjectScoresBarChart.vue'
-import ProgressOverTimeChart from 'components/student/ProgressOverTimeChart.vue'
+import SubjectScoresBarChart from '../../components/student/SubjectScoresBarChart.vue'
+import ProgressOverTimeChart from '../../components/student/ProgressOverTimeChart.vue'
 
-import RecentLesson from 'components/student/RecentLesson.vue'
-import userLessonsService from 'src/services/user.lessons.service'
+import RecentLesson from '../../components/student/RecentLesson.vue'
+import userLessonsService from '../../services/user.lessons.service'
 export default {
   components: {
     ProgressOverTimeChart,

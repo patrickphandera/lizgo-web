@@ -149,7 +149,7 @@
 <script>
 import { defineComponent } from 'vue'
 // import EssentialLink from 'components/EssentialLink.vue'
-// import AddLessonPage from 'src/components/AddLessonPage.vue'
+// import AddLessonPage from '../components/AddLessonPage.vue'
 
 const linksList = [
   {
@@ -199,7 +199,7 @@ const linksList = [
   },
 ]
 import { ref } from 'vue'
-import PersonalChatDialog from 'src/components/PersonalChatDialog.vue'
+import PersonalChatDialog from '../components/PersonalChatDialog.vue'
 export default defineComponent({
   name: 'MainLayout',
 

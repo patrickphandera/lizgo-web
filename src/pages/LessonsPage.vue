@@ -83,12 +83,12 @@
 </template>
 
 <script>
-import AddCredit from '../components/AddCredit.vue'
-import LessonFirstCard from 'src/components/TeacherLessonFirstCard.vue'
-import lessonsService from 'src/services/lessons.service'
-import subjectsService from 'src/services/subjects.service'
-import levelsService from 'src/services/levels.service'
-import RegistExtraInformationRegisterationPopUp from '../components/RegistExtraInformationRegisterationPopUp.vue'
+import AddCredit from '../../components/AddCredit.vue'
+import LessonFirstCard from '../../components/TeacherLessonFirstCard.vue'
+import lessonsService from '../../services/lessons.service'
+import subjectsService from '../../services/subjects.service'
+import levelsService from '../../services/levels.service'
+import RegistExtraInformationRegisterationPopUp from '../../components/RegistExtraInformationRegisterationPopUp.vue'
 export default {
   components: {
     LessonFirstCard,

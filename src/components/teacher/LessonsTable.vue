@@ -60,7 +60,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import RestService from 'src/services/rest.service.js'
+import RestService from '../services/rest.service.js'
 import { useQuasar } from 'quasar'
 
 export default {

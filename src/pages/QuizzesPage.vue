@@ -38,7 +38,7 @@
 import { defineComponent, ref } from 'vue'
 import QuizCard from '../components/QuizCard.vue'
 import CreateQuizModal from '../components/CreateQuizModal.vue'
-import quizzesService from 'src/services/quizzes.service'
+import quizzesService from '../services/quizzes.service'
 export default defineComponent({
   name: 'QuizzesPage',
   components: { QuizCard, CreateQuizModal },

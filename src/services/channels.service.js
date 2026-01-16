@@ -1,4 +1,4 @@
-// src/services/channels.service.js
+// ../services/channels.service.js
 import BaseDbService from './base.db.service.js'
 
 class ChannelsService extends BaseDbService {
