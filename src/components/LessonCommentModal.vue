@@ -183,6 +183,10 @@ const closeModal = () => {
   socketService.leaveConversation(props.conversationId)
 }
 
+// onMounted(async () => {
+//   await loadMessages()
+// })
+
 // ─── Lifecycle ──────────────────────────────────────
 onMounted(() => {
   const token = authStore.token

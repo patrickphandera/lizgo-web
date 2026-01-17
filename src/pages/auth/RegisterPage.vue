@@ -93,7 +93,7 @@ class="q-pb-md"
 
 <script>
 import { ref } from 'vue'
-import AuthService from '../services/auth.service.js'
+import AuthService from '../../services/auth.service.js'
 import { Notify } from 'quasar'
 
 export default {

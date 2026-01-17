@@ -36,20 +36,20 @@
             <q-space />
           </div>
         </div>
-        <GroupChatModal></GroupChatModal>
+       <LessonCommentModal :conversationId="conversation.id"></LessonCommentModal>
       </div>
     </q-card>
   </div>
 </template>
 
 <script>
-  import GroupChatModal from './GroupChatModal.vue'
+  import LessonCommentModal from '../components/LessonCommentModal.vue'
 import { defineComponent } from 'vue'
 import { ref } from 'vue'
 export default defineComponent({
   name: 'ChannelCard',
   props: { conversation: Object },
-  components: { GroupChatModal },
+  components: { LessonCommentModal },
   setup() {
     return {
       showConversation: ref(false),

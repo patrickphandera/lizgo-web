@@ -1,12 +1,11 @@
 <template>
   <q-form @submit="onSubmit" class="q-gutter-md">
-
     <q-input
       v-model="formData.title"
       label="Channel Title *"
       dense
       outlined
-      :rules="[val => !!val || 'Title is required']"
+      :rules="[(val) => !!val || 'Title is required']"
     />
 
     <!-- Curriculum Select -->
@@ -20,7 +19,7 @@
       outlined
       emit-value
       map-options
-      :rules="[val => !!val || 'Curriculum is required']"
+      :rules="[(val) => !!val || 'Curriculum is required']"
       @update:model-value="onCurriculumChange"
     />
 
@@ -37,7 +36,7 @@
       map-options
       :loading="loadingLevels"
       :disable="!formData.curriculumId"
-      :rules="[val => !!val || 'Level is required']"
+      :rules="[(val) => !!val || 'Level is required']"
     />
 
     <q-input
@@ -46,17 +45,11 @@
       dense
       outlined
       type="textarea"
-      :rules="[val => !!val || 'Description is required']"
+      :rules="[(val) => !!val || 'Description is required']"
     />
 
     <div class="flex justify-end q-gutter-sm">
-      <q-btn
-        label="Cancel"
-        color="grey"
-        flat
-        class="text-capitalize"
-        @click="$emit('cancel')"
-      />
+      <q-btn label="Cancel" color="grey" flat class="text-capitalize" @click="$emit('cancel')" />
       <q-btn
         label="Create Channel"
         type="submit"
@@ -83,7 +76,7 @@ const formData = ref({
   title: '',
   curriculumId: null,
   levelId: null,
-  description: ''
+  description: '',
 })
 
 const curriculums = ref([])
@@ -105,14 +98,10 @@ function onCurriculumChange(curriculumId) {
   // Filter client-side if you already have all levels
   // Or fetch from API: /levels?curriculumId=...
   // Here we assume you fetched all levels upfront (efficient if dataset is small)
-  filteredLevels.value = allLevels.value.filter(
-
-    level => {
-      console.log(level.curriculumId )
-      return level.curriculumId == curriculumId.id
-    }
-
-  )
+  filteredLevels.value = allLevels.value.filter((level) => {
+    console.log(level.curriculumId)
+    return level.curriculumId == curriculumId.id
+  })
   loadingLevels.value = false
 }
 
@@ -140,11 +129,17 @@ async function loadLevels() {
 async function onSubmit() {
   loading.value = true
   try {
-    const newChannel = await ChannelsService.create(formData.value)
+    let data = {
+      title: formData.value.title,
+      curriculumId: formData.value.curriculumId.id,
+      levelId: formData.value.levelId.id,
+      description: formData.value.description,
+    }
+    const newChannel = await ChannelsService.create(data)
     $q.notify({
       color: 'positive',
       message: 'Channel created successfully!',
-      icon: 'check'
+      icon: 'check',
     })
     emit('success', newChannel)
   } catch (error) {
@@ -160,9 +155,6 @@ async function onSubmit() {
 }
 
 onMounted(() => {
-  Promise.all([
-    loadCurriculums(),
-    loadLevels()
-  ])
+  Promise.all([loadCurriculums(), loadLevels()])
 })
 </script>
